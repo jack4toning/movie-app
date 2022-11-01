@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Logo from './Logo';
+import TextLogo from './TextLogo';
 import AddMovieButton from './AddMovieButton';
 import SearchBar from './SearchBar';
 import movieBackground from '../../../assets/images/movie-background.png';
@@ -8,7 +8,7 @@ import movieBackground from '../../../assets/images/movie-background.png';
 export function Header() {
   return (
     <Container>
-      <Logo />
+      <TextLogo />
       <AddMovieButton />
       <SearchBar />
     </Container>
@@ -20,4 +20,5 @@ const Container = styled.div`
   height: 396px;
   width: 1200px;
   background: url(${movieBackground}) #000;
+  margin-bottom: 10px;
 `;

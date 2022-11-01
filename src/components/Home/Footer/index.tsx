@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export default function Logo() {
+export function Footer() {
   return (
     <Container>
       <BoldLogoText>netflix</BoldLogoText>
@@ -11,9 +11,12 @@ export default function Logo() {
 }
 
 const Container = styled.div`
-  position: absolute;
-  left: 60px;
-  top: 20px;
+  width: 1200px;
+  height: 70px;
+  background: #424242;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const BoldLogoText = styled.span`

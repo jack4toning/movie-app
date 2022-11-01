@@ -17,4 +17,9 @@ const Button = styled.div`
   font-weight: 600;
   font-size: 20px;
   color: #f65261;
+  cursor: pointer;
+
+  :hover {
+    background: rgba(96, 96, 96, 0.78);
+  }
 `;
