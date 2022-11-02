@@ -50,6 +50,7 @@ const Button = styled.button`
   border: none;
   font-size: 20px;
   font-weight: 500;
+  color: #fff;
   cursor: pointer;
 
   :hover {
