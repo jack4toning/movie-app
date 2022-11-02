@@ -47,7 +47,10 @@ const Container = styled.div`
   display: flex;
 `;
 
-const OptionsWrapper = styled.div``;
+const OptionsWrapper = styled.div`
+  z-index: 1;
+  background: #232323b3;
+`;
 
 const Option = styled.div`
   font-weight: 500;
