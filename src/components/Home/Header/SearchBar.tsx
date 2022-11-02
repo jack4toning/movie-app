@@ -18,8 +18,6 @@ const Container = styled.div`
 `;
 
 const Title = styled.p`
-  color: #fff;
-  text-align: left;
   font-weight: 300;
   font-size: 40px;
   margin: 0 0 38px 0;
@@ -34,7 +32,6 @@ const Input = styled.input`
   border: none;
   outline: none;
   text-indent: 1rem;
-  color: #fff;
   caret-color: #d4d4d4;
   font-size: 20px;
 
@@ -53,7 +50,6 @@ const Button = styled.button`
   border: none;
   font-size: 20px;
   font-weight: 500;
-  color: #ffffff;
   cursor: pointer;
 
   :hover {

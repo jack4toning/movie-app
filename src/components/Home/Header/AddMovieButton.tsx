@@ -14,6 +14,7 @@ const Button = styled.div`
   line-height: 46px;
   background: rgba(96, 96, 96, 0.68);
   border-radius: 4px;
+  text-align: center;
   font-weight: 600;
   font-size: 20px;
   color: #f65261;
