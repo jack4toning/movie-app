@@ -58,9 +58,9 @@ const Option = styled.div`
   letter-spacing: 0.89px;
   height: 60px;
   line-height: 60px;
-  width: 135px;
+  width: 139px;
   cursor: pointer;
-  text-indent: 2px;
+  text-indent: 4px;
 `;
 
 const Triangle = styled.div`
