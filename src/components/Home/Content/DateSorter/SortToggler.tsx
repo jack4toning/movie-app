@@ -60,6 +60,7 @@ const Option = styled.div`
   line-height: 60px;
   width: 135px;
   cursor: pointer;
+  text-indent: 2px;
 `;
 
 const Triangle = styled.div`
