@@ -1,15 +1,21 @@
 import React from 'react';
-import { Header, Content, Footer } from '../../components/Home';
+import { Header, Content, Footer, AddModal } from '../../components/Home';
+import styled from 'styled-components';
 import mockData from '../../mock/mockData.json';
 
 const { data: movieList } = mockData;
 
 export function Home() {
   return (
-    <div>
+    <Container>
       <Header />
       <Content movieList={movieList} />
       <Footer />
-    </div>
+      <AddModal />
+    </Container>
   );
 }
+
+const Container = styled.div`
+  position: relative;
+`;

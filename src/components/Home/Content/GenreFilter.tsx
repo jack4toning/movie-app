@@ -8,8 +8,9 @@ export function GenreFilter() {
 
   return (
     <Container>
-      {genres.map(genre => (
+      {genres.map((genre, index) => (
         <Genre
+          key={index}
           style={
             genre === curGenre ? { borderBottom: '2px solid #f65261' } : {}
           }
@@ -30,7 +31,7 @@ const Container = styled.div`
 `;
 
 const Genre = styled.div`
-  z-index: 1;
+  /* z-index: 1; */
   box-sizing: content-box;
   font-size: 16px;
   text-transform: uppercase;

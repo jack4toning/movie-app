@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import TextLogo from '../../Common/TextLogo';
 
 export function Footer() {
   return (
     <Container>
-      <BoldLogoText>netflix</BoldLogoText>
-      <ThinLogoText>roulette</ThinLogoText>
+      <TextLogo />
     </Container>
   );
 }
@@ -17,15 +17,4 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const BoldLogoText = styled.span`
-  color: #f65261;
-  display: inline-block;
-  font-size: 20px;
-  font-weight: 900;
-`;
-
-const ThinLogoText = styled(BoldLogoText)`
-  font-weight: 500;
 `;

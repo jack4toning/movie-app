@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import TextLogo from './TextLogo';
+import TextLogo from '../../Common/TextLogo';
 import AddMovieButton from './AddMovieButton';
 import SearchBar from './SearchBar';
 import movieBackground from '../../../assets/images/movie-background.png';
@@ -8,7 +8,7 @@ import movieBackground from '../../../assets/images/movie-background.png';
 export function Header() {
   return (
     <Container>
-      <TextLogo />
+      <TextLogo position />
       <AddMovieButton />
       <SearchBar />
     </Container>

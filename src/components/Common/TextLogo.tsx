@@ -1,9 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export default function TextLogo() {
+export default function TextLogo({ position }: { position?: boolean }) {
   return (
-    <Container>
+    <Container position={position}>
       <BoldLogoText>netflix</BoldLogoText>
       <ThinLogoText>roulette</ThinLogoText>
     </Container>
@@ -11,9 +11,15 @@ export default function TextLogo() {
 }
 
 const Container = styled.div`
-  position: absolute;
-  left: 60px;
-  top: 20px;
+  z-index: 3;
+
+  ${(props: { position?: boolean }) =>
+    props.position &&
+    css`
+      position: absolute;
+      left: 60px;
+      top: 20px;
+    `}
 `;
 
 const BoldLogoText = styled.span`
