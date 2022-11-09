@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { GenreFilter } from './GenreFilter';
-import { DateSorter } from './DateSorter';
+import { Sorter } from './Sorter';
 import { MovieList } from './MovieList';
 
 export function Content(props: { movieList: any[] }) {
@@ -12,7 +12,7 @@ export function Content(props: { movieList: any[] }) {
     <Container>
       <FilterSorterWrapper>
         <GenreFilter />
-        <DateSorter />
+        <Sorter />
         <Horizon />
       </FilterSorterWrapper>
       <MovieListWrapper>

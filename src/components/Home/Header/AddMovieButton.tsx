@@ -1,8 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
+import useGlobalState from '../../../hooks/useGlobalState';
 
 export default function AddMovieButton() {
-  return <Button>+ ADD MOVIE</Button>;
+  const { setModalOpen } = useGlobalState();
+
+  return (
+    <Button
+      onClick={() => {
+        setModalOpen(true);
+      }}>
+      + ADD MOVIE
+    </Button>
+  );
 }
 
 const Button = styled.div`

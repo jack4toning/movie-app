@@ -4,7 +4,7 @@ import triangle from '../../../../assets/images/triangle.svg';
 
 export function SortToggler() {
   const [toggle, setToggle] = useState(false);
-  const sortTypes = ['Release date', 'Movie name', 'Movie score'];
+  const sortTypes = ['Release date', 'Movie name', 'Rating'];
   const [curType, setCurType] = useState(sortTypes[0]);
 
   const handleClick = () => {

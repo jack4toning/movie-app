@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { SortToggler } from './SortToggler';
 
-export function DateSorter() {
+export function Sorter() {
   return (
     <Container>
       <ThinText>Sort by</ThinText>

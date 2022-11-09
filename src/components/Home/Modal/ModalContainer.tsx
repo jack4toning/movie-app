@@ -6,7 +6,12 @@ export default function ModalContainer({
 }: {
   children: React.ReactNode;
 }) {
-  return <Container>{children}</Container>;
+  return (
+    <Container>
+      <Background />
+      <ChildrenWrapper>{children}</ChildrenWrapper>
+    </Container>
+  );
 }
 
 const Container = styled.div`
@@ -16,6 +21,19 @@ const Container = styled.div`
   top: 0;
   width: 1200px;
   height: 2318px;
+`;
+
+const ChildrenWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+`;
+
+const Background = styled.div`
+  width: 100%;
+  height: 100%;
   background: rgba(35, 35, 35, 0.918051);
   mix-blend-mode: normal;
   opacity: 0.89;

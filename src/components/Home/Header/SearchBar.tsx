@@ -35,7 +35,7 @@ const Input = styled.input`
   caret-color: #d4d4d4;
   font-size: 20px;
 
-  ::-webkit-input-placeholder {
+  &::-webkit-input-placeholder {
     /*Webkit browsers*/
     font-family: 'Montserrat', sans-serif;
   }

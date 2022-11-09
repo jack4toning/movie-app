@@ -31,7 +31,7 @@ const Container = styled.div`
 `;
 
 const Genre = styled.div`
-  /* z-index: 1; */
+  z-index: 1;
   box-sizing: content-box;
   font-size: 16px;
   text-transform: uppercase;

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export class GenreToggler extends React.PureComponent<
   any,
@@ -34,66 +34,56 @@ export class GenreToggler extends React.PureComponent<
 
   render() {
     return (
-      <Container>
-        <CustomSelect
+      <CustomSelect
+        onClick={e => {
+          this.handleClick(e);
+        }}>
+        <Triangle
           onClick={e => {
             this.handleClick(e);
-          }}>
-          <Triangle
-            onClick={e => {
-              this.handleClick(e);
-            }}
-            style={{
-              transform: `rotateZ(${!this.state.toggle ? 0 : '180deg'})`,
-            }}
-          />
-          Select Genre
-          <OptionWrapper>
-            {this.state.toggle &&
-              this.state.genres.map((genre, index) => {
-                const checked = this.state.selectedGenres.find(
-                  sGenre => sGenre === genre
-                );
+          }}
+          style={{
+            transform: `rotateZ(${!this.state.toggle ? 0 : '180deg'})`,
+          }}
+        />
+        Select Genre
+        <OptionWrapper>
+          {this.state.toggle &&
+            this.state.genres.map((genre, index) => {
+              const checked = this.state.selectedGenres.find(
+                sGenre => sGenre === genre
+              );
+              const isCheck = checked !== undefined ? true : false;
+              console.log(isCheck);
 
-                return (
-                  <Option key={index}>
-                    <Checkbox
-                      checked={checked !== undefined ? true : false}
-                      id={String(index)}
-                      type={'checkbox'}
-                      onChange={e => {
-                        this.handleSelect(e, genre);
-                      }}
-                    />
-                    <Genre htmlFor={String(index)}>{genre}</Genre>
-                  </Option>
-                );
-              })}
-          </OptionWrapper>
-        </CustomSelect>
-      </Container>
+              return (
+                <Option key={index}>
+                  <Checkbox
+                    isCheck={isCheck}
+                    id={String(index)}
+                    type={'checkbox'}
+                    onChange={e => {
+                      this.handleSelect(e, genre);
+                    }}
+                  />
+                  <Genre htmlFor={String(index)}>{genre}</Genre>
+                </Option>
+              );
+            })}
+        </OptionWrapper>
+      </CustomSelect>
     );
   }
 }
 
-const Container = styled.div`
-  width: 1080px;
-  height: 600px;
-  background-color: #232323;
-  border-radius: 4px;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const CustomSelect = styled.div`
+  z-index: 1;
   position: relative;
   width: 525px;
   height: 57px;
   background: #323232f2;
   border-radius: 4px;
-  text-indent: 1rem;
+  text-indent: 18px;
   color: rgba(255, 255, 255, 0.8);
   font-size: 20px;
   font-weight: 400;
@@ -142,14 +132,28 @@ const Checkbox = styled.input`
   margin-right: 7px;
 
   &::before {
-    content: ${props => (props.checked ? css`url(${triangleUrl})` : '')};
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    background-color: ${props => (props.checked ? '#e64c5a' : '#fff')};
+    background: #fff;
     width: 100%;
     height: 100%;
     border-radius: 2px;
+  }
+
+  &::before {
+    content: ${(props: { isCheck: boolean }) =>
+      props.isCheck && `url(${triangleUrl})`};
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: ${(props: { isCheck: boolean }) =>
+      props.isCheck && '#e64c5a'};
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    font-size: 12px;
   }
 `;
 
