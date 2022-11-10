@@ -154,6 +154,7 @@ const Checkbox = styled.input`
     height: 100%;
     border-radius: 2px;
     font-size: 12px;
+    text-indent: 1px;
   }
 `;
 

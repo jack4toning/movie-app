@@ -1,5 +1,12 @@
 import React from 'react';
-import { Header, Content, Footer, AddModal } from '../../components/Home';
+import {
+  Header,
+  Content,
+  Footer,
+  AddModal,
+  // InfoModal,
+  // DelModal,
+} from '../../components/Home';
 import styled from 'styled-components';
 import mockData from '../../mock/mockData.json';
 import useGlobalState from '../../hooks/useGlobalState';
@@ -15,6 +22,8 @@ export function Home() {
       <Content movieList={movieList} />
       <Footer />
       {modalOpen && <AddModal />}
+      {/* {modalOpen && <InfoModal />} */}
+      {/* {modalOpen && <DelModal />} */}
     </Container>
   );
 }

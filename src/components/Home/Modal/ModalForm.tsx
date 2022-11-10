@@ -1,21 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
-import closeButton from '../../../assets/images/closeButton.svg';
-import calendarIcon from '../../../assets/images/calendarIcon.svg';
-import useGlobalState from '../../../hooks/useGlobalState';
 import DatePicker from './DatePicker';
+import { CloseButton } from '../../Common';
 
 export default function ModalForm({ title }: { title: string }) {
-  const { setModalOpen } = useGlobalState();
-
   return (
     <Container>
-      <CloseButton
-        onClick={() => {
-          setModalOpen(false);
-        }}
-      />
+      <CloseButton position={30} />
       <Title>{title}</Title>
       <FlexWrapper>
         <OptionWrapper>
@@ -24,7 +16,7 @@ export default function ModalForm({ title }: { title: string }) {
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>release date</SmallTitle>
-          <CustomDatePicker></CustomDatePicker>
+          <DatePicker />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>movie url</SmallTitle>
@@ -62,17 +54,6 @@ const Container = styled.div`
   background: #232323;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1), 0px 2px 10px rgba(0, 0, 0, 0.07),
     0px 10px 20px rgba(0, 0, 0, 0.05), 0px 10px 50px rgba(0, 0, 0, 0.05);
-`;
-
-const CloseButton = styled.div`
-  width: 21px;
-  height: 21px;
-  background-image: url(${closeButton});
-  background-size: cover;
-  position: absolute;
-  right: 30px;
-  top: 30px;
-  cursor: pointer;
 `;
 
 const Title = styled.div`
@@ -117,43 +98,6 @@ const LongInput = styled.input`
 const ShortInput = styled(LongInput)`
   width: 301px;
   height: 57px;
-`;
-
-// const DatePicker = styled.div`
-//   position: relative;
-//   width: 301px;
-//   height: 57px;
-//   line-height: 57px;
-//   background: rgba(50, 50, 50, 0.948044);
-//   opacity: 0.8;
-//   border-radius: 4px;
-//   font-size: 20px;
-//   text-indent: 18px;
-//   color: rgba(255, 255, 255, 0.2);
-// `;
-
-const CustomDatePicker = styled(DatePicker)`
-  position: relative;
-  width: 301px;
-  height: 57px;
-  line-height: 57px;
-  background: rgba(50, 50, 50, 0.948044);
-  opacity: 0.8;
-  border-radius: 4px;
-  font-size: 20px;
-  text-indent: 18px;
-  color: rgba(255, 255, 255, 0.2);
-`;
-
-const CalendarIcon = styled.div`
-  width: 24px;
-  height: 22px;
-  color: #f65261;
-  position: absolute;
-  top: 18px;
-  right: 17px;
-  background-image: url(${calendarIcon});
-  cursor: pointer;
 `;
 
 const TextArea = styled.textarea`
