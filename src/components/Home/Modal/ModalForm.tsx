@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import closeButton from '../../../assets/images/closeButton.svg';
+import calendarIcon from '../../../assets/images/calendarIcon.svg';
 import useGlobalState from '../../../hooks/useGlobalState';
+import DatePicker from './DatePicker';
 
 export default function ModalForm({ title }: { title: string }) {
   const { setModalOpen } = useGlobalState();
@@ -22,7 +24,7 @@ export default function ModalForm({ title }: { title: string }) {
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>release date</SmallTitle>
-          <DatePicker>Select Date</DatePicker>
+          <CustomDatePicker></CustomDatePicker>
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>movie url</SmallTitle>
@@ -45,6 +47,8 @@ export default function ModalForm({ title }: { title: string }) {
           <TextArea placeholder='Movie description' />
         </OptionWrapper>
       </FlexWrapper>
+      <ResetButton>Reset</ResetButton>
+      <SubmitButton>Submit</SubmitButton>
     </Container>
   );
 }
@@ -115,7 +119,21 @@ const ShortInput = styled(LongInput)`
   height: 57px;
 `;
 
-const DatePicker = styled.div`
+// const DatePicker = styled.div`
+//   position: relative;
+//   width: 301px;
+//   height: 57px;
+//   line-height: 57px;
+//   background: rgba(50, 50, 50, 0.948044);
+//   opacity: 0.8;
+//   border-radius: 4px;
+//   font-size: 20px;
+//   text-indent: 18px;
+//   color: rgba(255, 255, 255, 0.2);
+// `;
+
+const CustomDatePicker = styled(DatePicker)`
+  position: relative;
   width: 301px;
   height: 57px;
   line-height: 57px;
@@ -125,6 +143,17 @@ const DatePicker = styled.div`
   font-size: 20px;
   text-indent: 18px;
   color: rgba(255, 255, 255, 0.2);
+`;
+
+const CalendarIcon = styled.div`
+  width: 24px;
+  height: 22px;
+  color: #f65261;
+  position: absolute;
+  top: 18px;
+  right: 17px;
+  background-image: url(${calendarIcon});
+  cursor: pointer;
 `;
 
 const TextArea = styled.textarea`
@@ -162,4 +191,30 @@ const OptionWrapper = styled.div`
   &:nth-child(odd) {
     margin-right: 30px;
   }
+`;
+
+const Button = styled.div`
+  position: absolute;
+  bottom: 60px;
+  width: 180px;
+  height: 57px;
+  line-height: 57px;
+  font-weight: 500;
+  font-size: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
+const ResetButton = styled(Button)`
+  right: 253px;
+  color: #f65261;
+  border: 1.5px solid #f65261;
+`;
+
+const SubmitButton = styled(Button)`
+  right: 60px;
+  color: #fff;
+  background: #f65261;
 `;
