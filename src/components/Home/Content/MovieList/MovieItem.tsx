@@ -44,11 +44,17 @@ export function MovieItem({ movie }: { movie: any }) {
   };
   const handleEdit = () => {
     setShowMenuContent(false);
-    setModalState(prev => ({ ...prev, editModalOpen: true }));
+    setModalState(prev => ({
+      ...prev,
+      modalOpen: { ...prev.modalOpen, editModalOpen: true },
+    }));
   };
   const handleDelete = () => {
     setShowMenuContent(false);
-    setModalState(prev => ({ ...prev, delModalOpen: true }));
+    setModalState(prev => ({
+      ...prev,
+      modalOpen: { ...prev.modalOpen, delModalOpen: true },
+    }));
   };
 
   return (

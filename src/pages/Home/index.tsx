@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Header,
   Content,
@@ -22,7 +22,17 @@ export function Home() {
   const isModalOpen =
     addModalOpen || editModalOpen || delModalOpen || infoModalOpen;
 
-  if (isModalOpen) window.scrollTo({ top: 0, left: 0 });
+  const coordinate = useRef({ top: 0, left: 0 });
+  if (window.scrollX !== 0 || window.scrollY !== 0)
+    coordinate.current = { top: window.scrollY, left: window.scrollX };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      window.scrollTo({ top: 0, left: 0 });
+    } else {
+      window.scrollTo(coordinate.current);
+    }
+  }, [isModalOpen]);
 
   return (
     <Container>

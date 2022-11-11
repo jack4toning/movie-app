@@ -8,7 +8,10 @@ export default function AddMovieButton() {
   return (
     <Button
       onClick={() => {
-        setModalState(prev => ({ ...prev, addModalOpen: true }));
+        setModalState(prev => ({
+          ...prev,
+          modalOpen: { ...prev.modalOpen, addModalOpen: true },
+        }));
       }}>
       + ADD MOVIE
     </Button>

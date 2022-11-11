@@ -4,7 +4,15 @@ import closeButton from '../../assets/images/closeButton.svg';
 import useGlobalState from '../../hooks/useGlobalState';
 
 export const CloseButton = ({ position }: { position: number }) => {
-  const { setModalState } = useGlobalState();
+  const { modalState, setModalState } = useGlobalState();
+  interface stringKeyObj {
+    [key: string]: boolean;
+  }
+  const modalOpen: stringKeyObj = modalState.modalOpen;
+  let closeProp: string;
+  Object.keys(modalOpen).forEach(key => {
+    if (modalOpen[key]) closeProp = key;
+  });
 
   return (
     <SCCloseButton
@@ -12,10 +20,10 @@ export const CloseButton = ({ position }: { position: number }) => {
       onClick={() => {
         setModalState(prev => ({
           ...prev,
-          ...(prev.modalOpen.addModalOpen && { addModalOpen: false }),
-          ...(prev.editModalOpen && { editModalOpen: false }),
-          ...(prev.delModalOpen && { delModalOpen: false }),
-          ...(prev.infoModalOpen && { infoModalOpen: false }),
+          modalOpen: {
+            ...prev.modalOpen,
+            [closeProp]: false,
+          },
         }));
       }}
     />
