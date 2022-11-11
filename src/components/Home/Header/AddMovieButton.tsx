@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import useGlobalState from '../../../hooks/useGlobalState';
 
 export default function AddMovieButton() {
-  const { setModalOpen } = useGlobalState();
+  const { setModalState } = useGlobalState();
 
   return (
     <Button
       onClick={() => {
-        setModalOpen(true);
+        setModalState(prev => ({ ...prev, addModalOpen: true }));
       }}>
       + ADD MOVIE
     </Button>

@@ -4,13 +4,19 @@ import closeButton from '../../assets/images/closeButton.svg';
 import useGlobalState from '../../hooks/useGlobalState';
 
 export const CloseButton = ({ position }: { position: number }) => {
-  const { setModalOpen } = useGlobalState();
+  const { setModalState } = useGlobalState();
 
   return (
     <SCCloseButton
       position={position}
       onClick={() => {
-        setModalOpen(false);
+        setModalState(prev => ({
+          ...prev,
+          ...(prev.modalOpen.addModalOpen && { addModalOpen: false }),
+          ...(prev.editModalOpen && { editModalOpen: false }),
+          ...(prev.delModalOpen && { delModalOpen: false }),
+          ...(prev.infoModalOpen && { infoModalOpen: false }),
+        }));
       }}
     />
   );

@@ -4,8 +4,9 @@ import {
   Content,
   Footer,
   AddModal,
-  // InfoModal,
-  // DelModal,
+  EditModal,
+  InfoModal,
+  DelModal,
 } from '../../components/Home';
 import styled from 'styled-components';
 import mockData from '../../mock/mockData.json';
@@ -14,16 +15,24 @@ import useGlobalState from '../../hooks/useGlobalState';
 const { data: movieList } = mockData;
 
 export function Home() {
-  const { modalOpen } = useGlobalState();
+  const { modalState } = useGlobalState();
+  const { addModalOpen, editModalOpen, delModalOpen, infoModalOpen } =
+    modalState.modalOpen;
+
+  const isModalOpen =
+    addModalOpen || editModalOpen || delModalOpen || infoModalOpen;
+
+  if (isModalOpen) window.scrollTo({ top: 0, left: 0 });
 
   return (
     <Container>
       <Header />
-      <Content movieList={movieList} />
+      <Content movieList={movieList} isModalOpen={isModalOpen} />
       <Footer />
-      {modalOpen && <AddModal />}
-      {/* {modalOpen && <InfoModal />} */}
-      {/* {modalOpen && <DelModal />} */}
+      {addModalOpen && <AddModal />}
+      {editModalOpen && <EditModal />}
+      {delModalOpen && <DelModal />}
+      {infoModalOpen && <InfoModal />}
     </Container>
   );
 }

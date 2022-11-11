@@ -5,10 +5,10 @@ import useModal from './hooks/useModal';
 import Context from './context';
 
 function App() {
-  const { modalOpen, setModalOpen } = useModal();
+  const { modalState, setModalState } = useModal();
 
   return (
-    <Context.Provider value={{ modalOpen, setModalOpen }}>
+    <Context.Provider value={{ modalState, setModalState }}>
       <div className='App'>
         <Home />
       </div>

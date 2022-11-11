@@ -5,11 +5,11 @@ import { GenreFilter } from './GenreFilter';
 import { Sorter } from './Sorter';
 import { MovieList } from './MovieList';
 
-export function Content(props: { movieList: any[] }) {
-  const { movieList } = props;
+export function Content(props: { movieList: any[]; isModalOpen: boolean }) {
+  const { movieList, isModalOpen } = props;
 
   return (
-    <Container>
+    <Container isModalOpen={isModalOpen}>
       <FilterSorterWrapper>
         <GenreFilter />
         <Sorter />
@@ -27,12 +27,16 @@ export function Content(props: { movieList: any[] }) {
 
 Content.propTypes = {
   movieList: PropTypes.array.isRequired,
+  isModalOpen: PropTypes.bool.isRequired,
 };
 
 const Container = styled.div`
   width: 1200px;
+  height: ${({ isModalOpen }: { isModalOpen: boolean }) =>
+    isModalOpen ? '953px' : 'auto'};
   background: #232323;
   padding: 0 60px 23px 60px;
+  overflow: hidden;
   /* margin-bottom: 10px; */
 `;
 

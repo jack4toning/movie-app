@@ -20,7 +20,7 @@ const Container = styled.div`
   left: 0;
   top: 0;
   width: 1200px;
-  height: 2318px;
+  height: 1359px;
 `;
 
 const ChildrenWrapper = styled.div`

@@ -50,7 +50,6 @@ export default function DatePicker() {
                 ref={inputRef}
                 {...(value && inputProps)}
                 placeholder={'Select Date'}
-                // value={''}
                 disabled
               />
               <CalendarIcon
