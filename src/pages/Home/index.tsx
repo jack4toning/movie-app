@@ -22,15 +22,16 @@ export function Home() {
   const isModalOpen =
     addModalOpen || editModalOpen || delModalOpen || infoModalOpen;
 
-  const coordinate = useRef({ top: 0, left: 0 });
-  if (window.scrollX !== 0 || window.scrollY !== 0)
-    coordinate.current = { top: window.scrollY, left: window.scrollX };
+  const coordinate = useRef({ topLeft: { top: 0, left: 0 }, isModalOpen });
+
+  if (isModalOpen !== coordinate.current.isModalOpen)
+    coordinate.current.topLeft = { top: window.scrollY, left: window.scrollX };
 
   useEffect(() => {
     if (isModalOpen) {
       window.scrollTo({ top: 0, left: 0 });
     } else {
-      window.scrollTo(coordinate.current);
+      window.scrollTo(coordinate.current.topLeft);
     }
   }, [isModalOpen]);
 

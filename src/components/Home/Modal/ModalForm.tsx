@@ -1,10 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
 import { CloseButton } from '../../Common';
+import useGlobalState from '../../../hooks/useGlobalState';
 
 export default function ModalForm({ title }: { title: string }) {
+  const { modalState } = useGlobalState();
+  const {
+    title: movieTitle,
+    releaseDate,
+    movieUrl,
+    rating,
+    genres,
+    runtime,
+    overview,
+  } = modalState.modalForm;
+
+  const [formState, setFormState] = useState({
+    movieTitle,
+    releaseDate,
+    movieUrl,
+    rating,
+    genres,
+    runtime,
+    overview,
+  });
+
+  const hmRuntime =
+    formState.runtime === 0
+      ? ''
+      : `${Math.floor(formState.runtime / 60)}h ${formState.runtime % 60}min`;
+  const tfRating = formState.rating === 0 ? '' : formState.rating;
+
+  const handleReset = () => {
+    setFormState(() => ({
+      movieTitle: '',
+      releaseDate: '',
+      movieUrl: '',
+      rating: 0,
+      genres: [],
+      runtime: 0,
+      overview: '',
+    }));
+  };
+
+  const handleSubmit = () => {};
+
+  const handleChangeMovieTitie = (e: any) => {
+    setFormState(prev => ({ ...prev, movieTitle: e.target.value }));
+  };
+
+  const handleChangeReleaseDate = (releaseDate: string) => {
+    setFormState(prev => ({ ...prev, releaseDate }));
+  };
+
+  const handleChangeMovieUrl = (e: any) => {
+    setFormState(prev => ({ ...prev, movieUrl: e.target.value }));
+  };
+
+  const handleChangeMovieRating = (e: any) => {
+    setFormState(prev => ({ ...prev, rating: e.target.value }));
+  };
+
+  const handleChangeMovieGenres = (genres: string[]) => {
+    setFormState(prev => ({ ...prev, genres }));
+  };
+
+  const handleChangeMovieRuntime = (e: any) => {
+    setFormState(prev => ({ ...prev, runtime: e.target.value }));
+  };
+
+  const handleChangeMovieOverview = (e: any) => {
+    setFormState(prev => ({ ...prev, overview: e.target.value }));
+  };
+
   return (
     <Container>
       <CloseButton position={30} />
@@ -12,35 +82,61 @@ export default function ModalForm({ title }: { title: string }) {
       <FlexWrapper>
         <OptionWrapper>
           <SmallTitle>title</SmallTitle>
-          <LongInput placeholder='title' />
+          <LongInput
+            placeholder='title'
+            value={formState.movieTitle}
+            onChange={handleChangeMovieTitie}
+          />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>release date</SmallTitle>
-          <DatePicker />
+          <DatePicker
+            date={formState.releaseDate}
+            onChange={handleChangeReleaseDate}
+          />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>movie url</SmallTitle>
-          <LongInput placeholder='https://' />
+          <LongInput
+            placeholder='https://'
+            value={formState.movieUrl}
+            onChange={handleChangeMovieUrl}
+          />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>rating</SmallTitle>
-          <ShortInput placeholder='7.8' />
+          <ShortInput
+            placeholder='7.8'
+            value={tfRating}
+            onChange={handleChangeMovieRating}
+          />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>genre</SmallTitle>
-          <GenreToggler />
+          <GenreToggler
+            selectedGenres={formState.genres}
+            onChange={handleChangeMovieGenres}
+          />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>runtime</SmallTitle>
-          <ShortInput placeholder='minutes' />
+          <ShortInput
+            placeholder='minutes'
+            value={hmRuntime}
+            onChange={handleChangeMovieRuntime}
+          />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>overview</SmallTitle>
-          <TextArea placeholder='Movie description' />
+          <TextArea
+            placeholder='Movie description'
+            value={formState.overview}
+            onChange={handleChangeMovieOverview}
+          />
         </OptionWrapper>
       </FlexWrapper>
-      <ResetButton>Reset</ResetButton>
-      <SubmitButton>Submit</SubmitButton>
+      <ResetButton onClick={handleReset}>Reset</ResetButton>
+      <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
     </Container>
   );
 }
@@ -103,10 +199,10 @@ const ShortInput = styled(LongInput)`
 const TextArea = styled.textarea`
   width: 856px;
   height: 197px;
+  padding: 18px 0 0 21px;
   font-size: 20px;
   border: none;
   outline: none;
-  text-indent: 18px;
   background: rgba(50, 50, 50, 0.948044);
   mix-blend-mode: normal;
   opacity: 0.8;

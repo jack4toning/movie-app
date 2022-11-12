@@ -14,20 +14,25 @@ export const CloseButton = ({ position }: { position: number }) => {
     if (modalOpen[key]) closeProp = key;
   });
 
-  return (
-    <SCCloseButton
-      position={position}
-      onClick={() => {
-        setModalState(prev => ({
-          ...prev,
-          modalOpen: {
-            ...prev.modalOpen,
-            [closeProp]: false,
-          },
-        }));
-      }}
-    />
-  );
+  const handleClick = () => {
+    setModalState(prev => ({
+      modalForm: {
+        title: '',
+        releaseDate: '',
+        movieUrl: '',
+        rating: 0,
+        genres: [],
+        runtime: 0,
+        overview: '',
+      },
+      modalOpen: {
+        ...prev.modalOpen,
+        [closeProp]: false,
+      },
+    }));
+  };
+
+  return <SCCloseButton position={position} onClick={handleClick} />;
 };
 
 const SCCloseButton = styled.div`

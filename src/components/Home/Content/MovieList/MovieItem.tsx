@@ -6,16 +6,16 @@ import useGlobalState from '../../../../hooks/useGlobalState';
 
 export function MovieItem({ movie }: { movie: any }) {
   const {
-    poster_path: movie_url,
+    poster_path: movieUrl,
     title,
-    release_date,
+    release_date: releaseDate,
     genres,
     overview,
     vote_average: rating,
     runtime,
   } = movie;
 
-  const releaseYear = release_date.split('-')[0];
+  const releaseYear = releaseDate.split('-')[0];
 
   const getGenreStr = (genres: string[]) => {
     const len = genres.length;
@@ -45,8 +45,16 @@ export function MovieItem({ movie }: { movie: any }) {
   const handleEdit = () => {
     setShowMenuContent(false);
     setModalState(prev => ({
-      ...prev,
       modalOpen: { ...prev.modalOpen, editModalOpen: true },
+      modalForm: {
+        title,
+        releaseDate,
+        movieUrl,
+        rating,
+        genres,
+        runtime,
+        overview,
+      },
     }));
   };
   const handleDelete = () => {
@@ -70,7 +78,7 @@ export function MovieItem({ movie }: { movie: any }) {
           <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
         </ContextMenuContent>
       )}
-      <Poster src={movie_url} alt='poster' />
+      <Poster src={movieUrl} alt='poster' />
       <Wrapper>
         <MovieName>{title}</MovieName>
         <ReleaseYear>{releaseYear}</ReleaseYear>
@@ -132,7 +140,9 @@ const MiniCloseButton = styled.div`
 `;
 
 const Button = styled.div`
-  width: 100%;
+  margin: 0 auto;
+  /* width: 100%; */
+  width: 188px;
   height: 34px;
   line-height: 34px;
   font-weight: 500;

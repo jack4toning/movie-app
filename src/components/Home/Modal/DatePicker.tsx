@@ -12,8 +12,14 @@ import { DatePicker as MuiDatePicker } from '@mui/x-date-pickers/DatePicker';
 import styled from 'styled-components';
 import calendarIcon from '../../../assets/images/calendarIcon.svg';
 
-export default function DatePicker() {
-  const [value, setValue] = useState<Dayjs | null>(dayjs(''));
+export default function DatePicker({
+  date,
+  onChange,
+}: {
+  date: string;
+  onChange: (releaseDate: string) => void;
+}) {
+  const [value, setValue] = useState<Dayjs | null>(dayjs(date));
   const [open, setOpen] = useState(false);
   const iconRef = useRef(null);
 
@@ -37,6 +43,7 @@ export default function DatePicker() {
         value={value}
         onChange={newValue => {
           setValue(newValue);
+          onChange(dayjs(newValue).format('YYYY-MM-DD'));
         }}
         onAccept={() => {
           setOpen(prev => !prev);
@@ -48,7 +55,9 @@ export default function DatePicker() {
             <CustomBox>
               <Input
                 ref={inputRef}
-                {...(value && inputProps)}
+                // {...(date === '' ? { ...inputProps, value: date } : inputProps)}
+                {...inputProps}
+                {...(date === '' ? { value: date } : {})}
                 placeholder={'Select Date'}
                 disabled
               />

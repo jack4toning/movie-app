@@ -2,45 +2,67 @@ import React from 'react';
 import styled from 'styled-components';
 
 export class GenreToggler extends React.PureComponent<
-  any,
-  { genres: string[]; selectedGenres: string[]; toggle: boolean }
+  { selectedGenres: string[]; onChange: (genres: string[]) => void },
+  { genres: string[]; toggle: boolean }
 > {
-  constructor(props: any) {
+  constructor(props: {
+    selectedGenres: string[];
+    genres: string[];
+    onChange: () => void;
+  }) {
     super(props);
     this.state = {
-      genres: ['Crime', 'Documentary', 'Horror', 'Comedy'],
-      selectedGenres: [],
+      genres: [
+        'Drama',
+        'Romance',
+        'Animation',
+        'Adventure',
+        'Family',
+        'Comedy',
+        'Fantasy',
+        'Science Fiction',
+        'Action',
+        'Mystery',
+        'Thriller',
+        'Music',
+        'War',
+        'Crime',
+        'History',
+        'Horror',
+        'Western',
+        'Documentary',
+        'TV Movie',
+      ],
       toggle: false,
     };
   }
 
-  handleClick(e: any) {
+  handleSelectClick(e: any) {
     if (e.currentTarget === e.target)
       this.setState({ toggle: !this.state.toggle });
   }
 
-  handleSelect(e: any, genre: string) {
+  handleOptionSelect(e: any, genre: string) {
+    let selectedGenres;
     if (e.target.checked)
-      this.setState({
-        selectedGenres: [...this.state.selectedGenres, genre],
-      });
+      selectedGenres = [...this.props.selectedGenres, genre];
     else
-      this.setState({
-        selectedGenres: this.state.selectedGenres.filter(
-          sGenre => sGenre !== genre
-        ),
-      });
+      selectedGenres = this.props.selectedGenres.filter(
+        sGenre => sGenre !== genre
+      );
+
+    this.props.onChange(selectedGenres);
   }
 
   render() {
     return (
       <CustomSelect
         onClick={e => {
-          this.handleClick(e);
+          this.handleSelectClick(e);
         }}>
         <Triangle
           onClick={e => {
-            this.handleClick(e);
+            this.handleSelectClick(e);
           }}
           style={{
             transform: `rotateZ(${!this.state.toggle ? 0 : '180deg'})`,
@@ -50,12 +72,10 @@ export class GenreToggler extends React.PureComponent<
         <OptionWrapper>
           {this.state.toggle &&
             this.state.genres.map((genre, index) => {
-              const checked = this.state.selectedGenres.find(
+              const checked = this.props.selectedGenres.find(
                 sGenre => sGenre === genre
               );
               const isCheck = checked !== undefined ? true : false;
-              console.log(isCheck);
-
               return (
                 <Option key={index}>
                   <Checkbox
@@ -63,7 +83,7 @@ export class GenreToggler extends React.PureComponent<
                     id={String(index)}
                     type={'checkbox'}
                     onChange={e => {
-                      this.handleSelect(e, genre);
+                      this.handleOptionSelect(e, genre);
                     }}
                   />
                   <Genre htmlFor={String(index)}>{genre}</Genre>
@@ -105,12 +125,18 @@ const Triangle = styled.div`
 
 const OptionWrapper = styled.div`
   width: 525px;
+  max-height: 187px;
+  overflow-y: scroll;
   background: rgba(35, 35, 35, 0.918051);
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1), 0px 2px 10px rgba(0, 0, 0, 0.1),
     0px 10px 20px rgba(0, 0, 0, 0.1), 0px 10px 50px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(13.5914px);
   /* Note: backdrop-filter has minimal browser support */
   border-radius: 4px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Option = styled.div`

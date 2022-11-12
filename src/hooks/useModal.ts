@@ -13,8 +13,9 @@ const useModal = () => {
       releaseDate: '',
       movieUrl: '',
       rating: 0,
-      genre: [],
+      genres: [],
       runtime: 0,
+      overview: '',
     },
   });
   return { modalState, setModalState };

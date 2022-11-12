@@ -13,8 +13,9 @@ type defaultContextType = {
       releaseDate: string;
       movieUrl: string;
       rating: number;
-      genre: string[];
+      genres: string[];
       runtime: number;
+      overview: string;
     };
   };
   setModalState:
@@ -31,8 +32,9 @@ type defaultContextType = {
             releaseDate: string;
             movieUrl: string;
             rating: number;
-            genre: never[];
+            genres: never[];
             runtime: number;
+            overview: string;
           };
         }>
       >
@@ -52,8 +54,9 @@ const defaultContext: defaultContextType = {
       releaseDate: '',
       movieUrl: '',
       rating: 0,
-      genre: [],
+      genres: [],
       runtime: 0,
+      overview: '',
     },
   },
   setModalState: () => {},
