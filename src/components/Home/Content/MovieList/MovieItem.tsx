@@ -6,6 +6,7 @@ import useDispatch from '../../../../hooks/useDispatch';
 
 export function MovieItem({ movie }: { movie: any }) {
   const {
+    id,
     poster_path: movieUrl,
     title,
     release_date: releaseDate,
@@ -48,6 +49,7 @@ export function MovieItem({ movie }: { movie: any }) {
     dispatch({
       type: 'fillModalForm',
       payload: {
+        id,
         title,
         releaseDate,
         movieUrl,

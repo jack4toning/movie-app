@@ -58,9 +58,13 @@ const Option = styled.div`
   letter-spacing: 0.89px;
   height: 60px;
   line-height: 60px;
-  width: 139px;
+  width: 142px;
   cursor: pointer;
   text-indent: 4px;
+
+  &:nth-of-type(n + 2):hover {
+    background: #f65261b3;
+  }
 `;
 
 const Triangle = styled.div`

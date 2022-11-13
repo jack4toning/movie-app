@@ -5,6 +5,17 @@ export type ModalState = {
   modalForm: ModalForm;
 };
 
+export const defaultModalForm = {
+  id: -1,
+  title: '',
+  releaseDate: '',
+  movieUrl: '',
+  rating: -1,
+  genres: [],
+  runtime: -1,
+  overview: '',
+};
+
 export const initialState: ModalState = {
   modalOpen: {
     addModalOpen: false,
@@ -12,15 +23,7 @@ export const initialState: ModalState = {
     delModalOpen: false,
     infoModalOpen: false,
   },
-  modalForm: {
-    title: '',
-    releaseDate: '',
-    movieUrl: '',
-    rating: 0,
-    genres: [],
-    runtime: 0,
-    overview: '',
-  },
+  modalForm: defaultModalForm,
 };
 
 type ModalOpen = {
@@ -31,6 +34,7 @@ type ModalOpen = {
 };
 
 type ModalForm = {
+  id: number;
   title: string;
   releaseDate: string;
   movieUrl: string;
@@ -68,18 +72,11 @@ const useModal = () => {
       case 'clearModalForm':
         return {
           ...prevState,
-          modalForm: {
-            title: '',
-            releaseDate: '',
-            movieUrl: '',
-            rating: 0,
-            genres: [],
-            runtime: 0,
-            overview: '',
-          },
+          modalForm: defaultModalForm,
         };
       case 'fillModalForm':
         const {
+          id,
           title,
           releaseDate,
           movieUrl,
@@ -91,6 +88,7 @@ const useModal = () => {
         return {
           ...prevState,
           modalForm: {
+            id,
             title,
             releaseDate,
             movieUrl,

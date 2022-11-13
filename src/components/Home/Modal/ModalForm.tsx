@@ -4,17 +4,21 @@ import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
 import { CloseButton } from '../../Common';
 import useSelector from '../../../hooks/useSelector';
+import { addMovie, editMovie } from '../../../pages';
+import useDispatch from '../../../hooks/useDispatch';
 
 export default function ModalForm({
-  title,
+  formTitle,
   type,
 }: {
-  title: string;
+  formTitle: string;
   type: 'add' | 'edit';
 }) {
   const { modalForm } = useSelector(state => state.modal);
+  const dispatch = useDispatch();
   const {
-    title: movieTitle,
+    id,
+    title,
     releaseDate,
     movieUrl,
     rating,
@@ -23,38 +27,76 @@ export default function ModalForm({
     overview,
   } = modalForm;
 
+  const keep1DP = (num: number) => {
+    return num.toFixed(1);
+  };
+
   const [formState, setFormState] = useState({
-    movieTitle,
+    title,
     releaseDate,
     movieUrl,
-    rating,
+    rating: keep1DP(rating),
     genres,
-    runtime,
+    runtime: keep1DP(runtime),
     overview,
   });
 
+  const formRuntime = Number(formState.runtime);
   const hmRuntime =
-    formState.runtime === 0
+    formRuntime === -1 || Number.isNaN(formRuntime)
       ? ''
-      : `${Math.floor(formState.runtime / 60)}h ${formState.runtime % 60}min`;
-  const tfRating = formState.rating === 0 ? '' : formState.rating;
+      : `${Math.floor(formRuntime / 60)}h ${formRuntime % 60}min`;
+
+  // avoid NaN or <0 input
+  const excludeWrongNum = (numStr: string) => {
+    const rt = Number(numStr);
+    if (Number.isNaN(rt) || rt <= -1) return '';
+    return numStr;
+  };
+
+  const [showHMIndicator, setShowHMIndicator] = useState(true);
+
+  const handleMouseEnterHMI = () => {
+    setShowHMIndicator(false);
+  };
+  const handleMouseLeaveHMI = () => {
+    setShowHMIndicator(true);
+  };
 
   const handleReset = () => {
     setFormState(() => ({
-      movieTitle: '',
+      title: '',
       releaseDate: '',
       movieUrl: '',
-      rating: 0,
+      rating: '-1',
       genres: [],
-      runtime: 0,
+      runtime: '-1',
       overview: '',
     }));
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    if (type === 'add') {
+      addMovie({
+        ...formState,
+        rating: Number(formState.rating),
+        runtime: Number(formState.runtime),
+      });
+      dispatch({ type: 'closeModal', payload: 'add' });
+    } else if (type === 'edit') {
+      editMovie({
+        ...formState,
+        id,
+        rating: Number(formState.rating),
+        runtime: Number(formState.runtime),
+      });
+      dispatch({ type: 'closeModal', payload: 'edit' });
+    }
+    dispatch({ type: 'clearModalForm' });
+  };
 
   const handleChangeMovieTitie = (e: any) => {
-    setFormState(prev => ({ ...prev, movieTitle: e.target.value }));
+    setFormState(prev => ({ ...prev, title: e.target.value }));
   };
 
   const handleChangeReleaseDate = (releaseDate: string) => {
@@ -84,13 +126,13 @@ export default function ModalForm({
   return (
     <Container>
       <CloseButton position={30} modalType={type} />
-      <Title>{title}</Title>
+      <Title>{formTitle}</Title>
       <FlexWrapper>
         <OptionWrapper>
           <SmallTitle>title</SmallTitle>
           <LongInput
             placeholder='title'
-            value={formState.movieTitle}
+            value={formState.title}
             onChange={handleChangeMovieTitie}
           />
         </OptionWrapper>
@@ -113,7 +155,7 @@ export default function ModalForm({
           <SmallTitle>rating</SmallTitle>
           <ShortInput
             placeholder='7.8'
-            value={tfRating}
+            value={excludeWrongNum(formState.rating)}
             onChange={handleChangeMovieRating}
           />
         </OptionWrapper>
@@ -124,13 +166,25 @@ export default function ModalForm({
             onChange={handleChangeMovieGenres}
           />
         </OptionWrapper>
-        <OptionWrapper>
+        <OptionWrapper style={{ position: 'relative' }}>
           <SmallTitle>runtime</SmallTitle>
-          <ShortInput
-            placeholder='minutes'
-            value={hmRuntime}
-            onChange={handleChangeMovieRuntime}
-          />
+          {!showHMIndicator && (
+            <ShortInput
+              autoFocus
+              placeholder='minutes'
+              value={excludeWrongNum(formState.runtime)}
+              onChange={handleChangeMovieRuntime}
+              onMouseLeave={handleMouseLeaveHMI}
+            />
+          )}
+          {showHMIndicator && (
+            <HMIndicator
+              placeholder='minutes'
+              value={hmRuntime}
+              onMouseEnter={handleMouseEnterHMI}
+              onChange={() => {}}
+            />
+          )}
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>overview</SmallTitle>
@@ -200,6 +254,15 @@ const LongInput = styled.input`
 const ShortInput = styled(LongInput)`
   width: 301px;
   height: 57px;
+`;
+
+// const RuntimeInput = styled(ShortInput)`
+//   -webkit-text-fill-color: transparent;
+// `;
+
+const HMIndicator = styled(ShortInput)`
+  /* position: absolute;
+  left: 0; */
 `;
 
 const TextArea = styled.textarea`

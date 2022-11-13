@@ -5,7 +5,7 @@ import ModalForm from './ModalForm';
 export function EditModal() {
   return (
     <ModalContainer>
-      <ModalForm title={'edit movie'} type={'edit'} />
+      <ModalForm formTitle={'edit movie'} type={'edit'} />
     </ModalContainer>
   );
 }
