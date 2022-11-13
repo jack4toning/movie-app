@@ -3,10 +3,16 @@ import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
 import { CloseButton } from '../../Common';
-import useGlobalState from '../../../hooks/useGlobalState';
+import useSelector from '../../../hooks/useSelector';
 
-export default function ModalForm({ title }: { title: string }) {
-  const { modalState } = useGlobalState();
+export default function ModalForm({
+  title,
+  type,
+}: {
+  title: string;
+  type: 'add' | 'edit';
+}) {
+  const { modalForm } = useSelector(state => state.modal);
   const {
     title: movieTitle,
     releaseDate,
@@ -15,7 +21,7 @@ export default function ModalForm({ title }: { title: string }) {
     genres,
     runtime,
     overview,
-  } = modalState.modalForm;
+  } = modalForm;
 
   const [formState, setFormState] = useState({
     movieTitle,
@@ -77,7 +83,7 @@ export default function ModalForm({ title }: { title: string }) {
 
   return (
     <Container>
-      <CloseButton position={30} />
+      <CloseButton position={30} modalType={type} />
       <Title>{title}</Title>
       <FlexWrapper>
         <OptionWrapper>

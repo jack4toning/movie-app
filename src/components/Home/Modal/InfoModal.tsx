@@ -8,7 +8,7 @@ export function InfoModal() {
   return (
     <ModalContainer>
       <Modal>
-        <CloseButton position={26} />
+        <CloseButton position={26} modalType={'info'} />
         <CrossWrapper />
         <Title>Congratulations!</Title>
         <Reminder>The movie has been added to database successfully</Reminder>

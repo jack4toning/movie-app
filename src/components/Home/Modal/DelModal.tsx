@@ -7,7 +7,7 @@ export function DelModal() {
   return (
     <ModalContainer>
       <Modal>
-        <CloseButton position={26} />
+        <CloseButton position={26} modalType={'del'} />
         <Title>Delete Movie</Title>
         <Reminder>Are you sure you want to delete this movie?</Reminder>
         <ConfirmButton>Confirm</ConfirmButton>

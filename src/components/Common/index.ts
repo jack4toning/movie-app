@@ -1,2 +1,2 @@
 export * from './TextLogo';
-export * from './styledComponents';
+export * from './CloseButton';

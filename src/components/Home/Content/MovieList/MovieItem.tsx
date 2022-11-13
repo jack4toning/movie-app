@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import threeDots from '../../../../assets/images/threeDots.svg';
 import miniCloseButton from '../../../../assets/images/miniCloseButton.svg';
-import useGlobalState from '../../../../hooks/useGlobalState';
+import useDispatch from '../../../../hooks/useDispatch';
 
 export function MovieItem({ movie }: { movie: any }) {
   const {
@@ -26,7 +26,7 @@ export function MovieItem({ movie }: { movie: any }) {
 
   const [showMenuIcon, setShowMenuIcon] = useState(false);
   const [showMenuIconContent, setShowMenuContent] = useState(false);
-  const { setModalState } = useGlobalState();
+  const dispatch = useDispatch();
 
   const handleMouseEnter = () => {
     setShowMenuIcon(true);
@@ -44,9 +44,10 @@ export function MovieItem({ movie }: { movie: any }) {
   };
   const handleEdit = () => {
     setShowMenuContent(false);
-    setModalState(prev => ({
-      modalOpen: { ...prev.modalOpen, editModalOpen: true },
-      modalForm: {
+    dispatch({ type: 'openModal', payload: 'edit' });
+    dispatch({
+      type: 'fillModalForm',
+      payload: {
         title,
         releaseDate,
         movieUrl,
@@ -55,14 +56,11 @@ export function MovieItem({ movie }: { movie: any }) {
         runtime,
         overview,
       },
-    }));
+    });
   };
   const handleDelete = () => {
     setShowMenuContent(false);
-    setModalState(prev => ({
-      ...prev,
-      modalOpen: { ...prev.modalOpen, delModalOpen: true },
-    }));
+    dispatch({ type: 'openModal', payload: 'del' });
   };
 
   return (

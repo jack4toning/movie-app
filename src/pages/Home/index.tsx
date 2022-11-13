@@ -10,14 +10,14 @@ import {
 } from '../../components/Home';
 import styled from 'styled-components';
 import mockData from '../../mock/mockData.json';
-import useGlobalState from '../../hooks/useGlobalState';
+import useSelector from '../../hooks/useSelector';
 
 const { data: movieList } = mockData;
 
 export function Home() {
-  const { modalState } = useGlobalState();
+  const { modalOpen } = useSelector(state => state.modal);
   const { addModalOpen, editModalOpen, delModalOpen, infoModalOpen } =
-    modalState.modalOpen;
+    modalOpen;
 
   const isModalOpen =
     addModalOpen || editModalOpen || delModalOpen || infoModalOpen;

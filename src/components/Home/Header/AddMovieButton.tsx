@@ -1,17 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import useGlobalState from '../../../hooks/useGlobalState';
+import useDispatch from '../../../hooks/useDispatch';
 
 export default function AddMovieButton() {
-  const { setModalState } = useGlobalState();
+  const dispatch = useDispatch();
 
   return (
     <Button
       onClick={() => {
-        setModalState(prev => ({
-          ...prev,
-          modalOpen: { ...prev.modalOpen, addModalOpen: true },
-        }));
+        dispatch({ type: 'openModal', payload: 'add' });
       }}>
       + ADD MOVIE
     </Button>

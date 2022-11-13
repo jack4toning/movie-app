@@ -5,7 +5,7 @@ import ModalForm from './ModalForm';
 export function AddModal() {
   return (
     <ModalContainer>
-      <ModalForm title={'add movie'} />
+      <ModalForm title={'add movie'} type={'add'} />
     </ModalContainer>
   );
 }
