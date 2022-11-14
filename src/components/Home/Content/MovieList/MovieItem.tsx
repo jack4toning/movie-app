@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { Dispatch, useState } from 'react';
 import styled from 'styled-components';
 import threeDots from '../../../../assets/images/threeDots.svg';
 import miniCloseButton from '../../../../assets/images/miniCloseButton.svg';
 import useDispatch from '../../../../hooks/useDispatch';
+import { ModalAction } from '../../../../hooks/useModal';
 
 export function MovieItem({ movie }: { movie: any }) {
   const {
@@ -27,7 +28,9 @@ export function MovieItem({ movie }: { movie: any }) {
 
   const [showMenuIcon, setShowMenuIcon] = useState(false);
   const [showMenuIconContent, setShowMenuContent] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(
+    dispatches => dispatches.modal
+  ) as Dispatch<ModalAction>;
 
   const handleMouseEnter = () => {
     setShowMenuIcon(true);

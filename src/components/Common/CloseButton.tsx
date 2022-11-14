@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import styled from 'styled-components';
 import closeButton from '../../assets/images/closeButton.svg';
 import useDispatch from '../../hooks/useDispatch';
+import { ModalAction } from '../../hooks/useModal';
 
 export const CloseButton = ({
   position,
@@ -10,7 +11,9 @@ export const CloseButton = ({
   position: number;
   modalType: 'add' | 'edit' | 'del' | 'info';
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(
+    dispatches => dispatches.modal
+  ) as Dispatch<ModalAction>;
 
   const handleClick = () => {
     dispatch({ type: 'closeModal', payload: modalType });

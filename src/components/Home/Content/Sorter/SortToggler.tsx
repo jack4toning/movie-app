@@ -1,24 +1,49 @@
-import React, { useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import triangle from '../../../../assets/images/triangle.svg';
+import useDispatch from '../../../../hooks/useDispatch';
+import { SortOrderAction } from '../../../../hooks/useSortOrder';
+import { sortMovieList } from '../../../../mock/mockData';
+
+const sortTypes = ['Release date', 'Movie name', 'Rating'] as const;
+export type SortTypes = typeof sortTypes[number];
+export type OrderTypes = 'asc' | 'desc';
 
 export function SortToggler() {
   const [toggle, setToggle] = useState(false);
-  const sortTypes = ['Release date', 'Movie name', 'Rating'];
-  const [curType, setCurType] = useState(sortTypes[0]);
 
-  const handleClick = () => {
+  const [curType, setCurType] = useState<SortTypes>(sortTypes[0]);
+  const [order, setOrder] = useState<OrderTypes>('desc');
+
+  const dispatch = useDispatch(
+    dispatches => dispatches.sortOrder
+  ) as Dispatch<SortOrderAction>;
+
+  const handleToggle = () => {
     setToggle(prev => !prev);
   };
 
-  const handleSelect = (type: string) => {
+  const handleSelect = (type: SortTypes) => {
     setCurType(type);
   };
+
+  const handleSort = (type: SortTypes, order: OrderTypes = 'desc') => {
+    sortMovieList(type, order);
+  };
+
+  const handleOrder = () => {
+    setOrder(prev => (prev === 'desc' ? 'asc' : 'desc'));
+  };
+
+  useEffect(() => {
+    handleSort(curType, order);
+    dispatch({ type: order === 'asc' ? 'orderByAsc' : 'orderByDesc' });
+  }, [curType, dispatch, order]);
 
   return (
     <Container>
       <OptionsWrapper>
-        <Option onClick={handleClick}>{curType}</Option>
+        <Option onClick={handleToggle}>{curType}</Option>
         {toggle &&
           sortTypes
             .filter(type => type !== curType)
@@ -27,16 +52,16 @@ export function SortToggler() {
                 key={index}
                 onClick={() => {
                   handleSelect(type);
-                  handleClick();
+                  handleToggle();
                 }}>
                 {type}
               </Option>
             ))}
       </OptionsWrapper>
       <Triangle
-        style={{ transform: `rotateX(${toggle ? '180deg' : 0})` }}
+        style={{ transform: `rotateX(${order === 'asc' ? '180deg' : 0})` }}
         onClick={() => {
-          handleClick();
+          handleOrder();
         }}
       />
     </Container>

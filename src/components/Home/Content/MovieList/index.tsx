@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { MovieItem } from './MovieItem';
+import useSelector from './../../../../hooks/useSelector';
 
 export function MovieList({ movieList }: { movieList: any[] }) {
+  useSelector(state => state.sortOrder);
+
   return (
     <Container>
       {movieList.map(movie => (

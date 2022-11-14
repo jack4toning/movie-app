@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { Dispatch, useState } from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
 import { CloseButton } from '../../Common';
 import useSelector from '../../../hooks/useSelector';
-import { addMovie, editMovie } from '../../../pages';
 import useDispatch from '../../../hooks/useDispatch';
+import { ModalAction, ModalState } from '../../../hooks/useModal';
+import { addMovie, editMovie } from '../../../mock/mockData';
 
 export default function ModalForm({
   formTitle,
@@ -14,8 +15,10 @@ export default function ModalForm({
   formTitle: string;
   type: 'add' | 'edit';
 }) {
-  const { modalForm } = useSelector(state => state.modal);
-  const dispatch = useDispatch();
+  const { modalForm } = useSelector(state => state.modal) as ModalState;
+  const dispatch = useDispatch(
+    dispatches => dispatches.modal
+  ) as Dispatch<ModalAction>;
   const {
     id,
     title,
@@ -37,7 +40,7 @@ export default function ModalForm({
     movieUrl,
     rating: keep1DP(rating),
     genres,
-    runtime: keep1DP(runtime),
+    runtime: String(runtime),
     overview,
   });
 

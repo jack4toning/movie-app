@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import styled from 'styled-components';
 import useDispatch from '../../../hooks/useDispatch';
+import { ModalAction } from '../../../hooks/useModal';
 
 export default function AddMovieButton() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(
+    dispatches => dispatches.modal
+  ) as Dispatch<ModalAction>;
 
   return (
     <Button
