@@ -1,16 +1,41 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import ModalContainer from './ModalContainer';
 import styled from 'styled-components';
 import { CloseButton } from '../../Common';
+import useDispatch from '../../../hooks/useDispatch';
+import { MovieListAction, MovieListState } from '../../../hooks/useMovieList';
+import useSelector from '../../../hooks/useSelector';
+import { ModalAction } from '../../../hooks/useModal';
 
 export function DelModal() {
+  const modalDispatch = useDispatch(
+    dispatches => dispatches.modal
+  ) as Dispatch<ModalAction>;
+
+  const movieListDispatch = useDispatch(
+    dispatches => dispatches.movieList
+  ) as Dispatch<MovieListAction>;
+
+  const {
+    focusMovieId: id,
+    genreFilter,
+    sort,
+  } = useSelector(state => state.movieList) as MovieListState;
+
+  const handleConfirm = () => {
+    movieListDispatch({ type: 'DELETE_MOVIE', payload: { id } });
+    movieListDispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
+    movieListDispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
+    modalDispatch({ type: 'closeModal', payload: 'del' });
+  };
+
   return (
     <ModalContainer>
       <Modal>
         <CloseButton position={26} modalType={'del'} />
         <Title>Delete Movie</Title>
         <Reminder>Are you sure you want to delete this movie?</Reminder>
-        <ConfirmButton>Confirm</ConfirmButton>
+        <ConfirmButton onClick={handleConfirm}>Confirm</ConfirmButton>
       </Modal>
     </ModalContainer>
   );

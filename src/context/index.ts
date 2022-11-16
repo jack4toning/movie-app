@@ -1,2 +1,2 @@
 export * from './modalContext';
-export * from './sortOrderContext';
+export * from './movieListContext';

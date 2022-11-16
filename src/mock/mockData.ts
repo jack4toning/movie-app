@@ -1,9 +1,9 @@
-import {
-  OrderTypes,
-  SortTypes,
-} from '../components/Home/Content/Sorter/SortToggler';
+// import {
+//   OrderTypes,
+//   SortTypes,
+// } from '../components/Home/Content/Sorter/SortToggler';
 
-const mockMovieData = {
+export const mockMovieData = {
   totalAmount: 3000,
   data: [
     {
@@ -155,112 +155,112 @@ const mockMovieData = {
   limit: 10,
 };
 
-const movieList = mockMovieData.data;
+// const movieList = mockMovieData.data;
 
-type Movie = {
-  id?: number;
-  title: string;
-  rating: number;
-  releaseDate: string;
-  movieUrl: string;
-  overview: string;
-  genres: string[];
-  runtime: number;
-};
+// type Movie = {
+//   id?: number;
+//   title: string;
+//   rating: number;
+//   releaseDate: string;
+//   movieUrl: string;
+//   overview: string;
+//   genres: string[];
+//   runtime: number;
+// };
 
-const addMovie = (movie: Movie) => {
-  // find the maximal id
-  let maxId = 0;
-  movieList.forEach(({ id }) => {
-    if (id > maxId) maxId = id;
-  });
-  maxId++;
+// const addMovie = (movie: Movie) => {
+//   // find the maximal id
+//   let maxId = 0;
+//   movieList.forEach(({ id }) => {
+//     if (id > maxId) maxId = id;
+//   });
+//   maxId++;
 
-  const {
-    title,
-    releaseDate: release_date,
-    movieUrl: poster_path,
-    rating: vote_average,
-    genres,
-    runtime,
-    overview,
-  } = movie;
+//   const {
+//     title,
+//     releaseDate: release_date,
+//     movieUrl: poster_path,
+//     rating: vote_average,
+//     genres,
+//     runtime,
+//     overview,
+//   } = movie;
 
-  const m = {
-    id: maxId,
-    title,
-    tagline: '',
-    vote_average,
-    vote_count: 0,
-    release_date,
-    poster_path,
-    overview,
-    budget: 0,
-    revenue: 0,
-    genres,
-    runtime,
-  };
-  movieList.push(m);
-};
+//   const m = {
+//     id: maxId,
+//     title,
+//     tagline: '',
+//     vote_average,
+//     vote_count: 0,
+//     release_date,
+//     poster_path,
+//     overview,
+//     budget: 0,
+//     revenue: 0,
+//     genres,
+//     runtime,
+//   };
+//   movieList.push(m);
+// };
 
-const editMovie = (movie: Movie) => {
-  const {
-    id,
-    title,
-    releaseDate: release_date,
-    movieUrl: poster_path,
-    rating: vote_average,
-    genres,
-    runtime,
-    overview,
-  } = movie;
-  const targetMovie = movieList.find(movie => movie.id === id);
-  targetMovie!.title = title;
-  targetMovie!.release_date = release_date;
-  targetMovie!.poster_path = poster_path;
-  targetMovie!.vote_average = vote_average;
-  targetMovie!.genres = genres;
-  targetMovie!.runtime = runtime;
-  targetMovie!.overview = overview;
-};
+// const editMovie = (movie: Movie) => {
+//   const {
+//     id,
+//     title,
+//     releaseDate: release_date,
+//     movieUrl: poster_path,
+//     rating: vote_average,
+//     genres,
+//     runtime,
+//     overview,
+//   } = movie;
+//   const targetMovie = movieList.find(movie => movie.id === id);
+//   targetMovie!.title = title;
+//   targetMovie!.release_date = release_date;
+//   targetMovie!.poster_path = poster_path;
+//   targetMovie!.vote_average = vote_average;
+//   targetMovie!.genres = genres;
+//   targetMovie!.runtime = runtime;
+//   targetMovie!.overview = overview;
+// };
 
-const delMovie = (id: number) => {
-  const index = movieList.findIndex(movie => movie.id === id);
-  movieList.splice(index, 1);
-};
+// const delMovie = (id: number) => {
+//   const index = movieList.findIndex(movie => movie.id === id);
+//   movieList.splice(index, 1);
+// };
 
-const compareDate = (d1: Date, d2: Date) => {
-  return d1.getTime() - d2.getTime();
-};
+// const compareDate = (d1: Date, d2: Date) => {
+//   return d1.getTime() - d2.getTime();
+// };
 
-const sortMovieList = (type: SortTypes, order: OrderTypes) => {
-  switch (type) {
-    case 'Release date':
-      movieList.sort((a, b) => {
-        const res = compareDate(
-          new Date(a.release_date),
-          new Date(b.release_date)
-        );
+// const sortMovieList = (type: SortTypes, order: OrderTypes) => {
+//   switch (type) {
+//     case 'Release date':
+//       movieList.sort((a, b) => {
+//         const res = compareDate(
+//           new Date(a.release_date),
+//           new Date(b.release_date)
+//         );
 
-        return order === 'desc' ? -res : res;
-      });
-      break;
-    case 'Movie name':
-      movieList.sort((a, b) => {
-        if (a.title > b.title) return order === 'desc' ? -1 : 1;
-        else if (a.title < b.title) return order === 'desc' ? 1 : -1;
-        else return 0;
-      });
-      break;
-    case 'Rating':
-      movieList.sort((a, b) => {
-        const res = a.vote_average - b.vote_average;
+//         return order === 'desc' ? -res : res;
+//       });
+//       break;
+//     case 'Movie name':
+//       movieList.sort((a, b) => {
+//         if (a.title > b.title) return order === 'desc' ? -1 : 1;
+//         else if (a.title < b.title) return order === 'desc' ? 1 : -1;
+//         else return 0;
+//       });
+//       break;
+//     case 'Rating':
+//       movieList.sort((a, b) => {
+//         const res = a.vote_average - b.vote_average;
 
-        return order === 'desc' ? -res : res;
-      });
-      break;
-    default:
-      break;
-  }
-};
-export { movieList, addMovie, editMovie, delMovie, sortMovieList };
+//         return order === 'desc' ? -res : res;
+//       });
+//       break;
+//     default:
+//       break;
+//   }
+// };
+// export { movieList, addMovie, editMovie, delMovie, sortMovieList };

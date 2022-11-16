@@ -4,6 +4,7 @@ import threeDots from '../../../../assets/images/threeDots.svg';
 import miniCloseButton from '../../../../assets/images/miniCloseButton.svg';
 import useDispatch from '../../../../hooks/useDispatch';
 import { ModalAction } from '../../../../hooks/useModal';
+import { MovieListAction } from '../../../../hooks/useMovieList';
 
 export function MovieItem({ movie }: { movie: any }) {
   const {
@@ -28,9 +29,6 @@ export function MovieItem({ movie }: { movie: any }) {
 
   const [showMenuIcon, setShowMenuIcon] = useState(false);
   const [showMenuIconContent, setShowMenuContent] = useState(false);
-  const dispatch = useDispatch(
-    dispatches => dispatches.modal
-  ) as Dispatch<ModalAction>;
 
   const handleMouseEnter = () => {
     setShowMenuIcon(true);
@@ -46,10 +44,15 @@ export function MovieItem({ movie }: { movie: any }) {
   const handleCloseButtonClick = () => {
     setShowMenuContent(false);
   };
+
+  const modalDispatch = useDispatch(
+    dispatches => dispatches.modal
+  ) as Dispatch<ModalAction>;
+
   const handleEdit = () => {
     setShowMenuContent(false);
-    dispatch({ type: 'openModal', payload: 'edit' });
-    dispatch({
+    modalDispatch({ type: 'openModal', payload: 'edit' });
+    modalDispatch({
       type: 'fillModalForm',
       payload: {
         id,
@@ -63,9 +66,15 @@ export function MovieItem({ movie }: { movie: any }) {
       },
     });
   };
+
+  const movieListDispatch = useDispatch(
+    dispatches => dispatches.movieList
+  ) as Dispatch<MovieListAction>;
+
   const handleDelete = () => {
     setShowMenuContent(false);
-    dispatch({ type: 'openModal', payload: 'del' });
+    modalDispatch({ type: 'openModal', payload: 'del' });
+    movieListDispatch({ type: 'FOCUS_ON_MOVIE', payload: { id } });
   };
 
   return (
@@ -95,6 +104,14 @@ const Container = styled.div`
   position: relative;
   width: 322px;
   margin-bottom: 50px;
+
+  &:nth-of-type(n + 1) {
+    margin-right: 57px;
+  }
+
+  &:nth-of-type(3n) {
+    margin-right: 0;
+  }
 `;
 
 const ContextMenuIcon = styled.div`
@@ -144,8 +161,8 @@ const MiniCloseButton = styled.div`
 
 const Button = styled.div`
   margin: 0 auto;
-  /* width: 100%; */
-  width: 188px;
+  width: 100%;
+  /* width: 189px; */
   height: 34px;
   line-height: 34px;
   font-weight: 500;

@@ -1,60 +1,56 @@
-import React, { Dispatch, useEffect, useState } from 'react';
+import React, { Dispatch, useState } from 'react';
 import styled from 'styled-components';
 import triangle from '../../../../assets/images/triangle.svg';
 import useDispatch from '../../../../hooks/useDispatch';
-import { SortOrderAction } from '../../../../hooks/useSortOrder';
-import { sortMovieList } from '../../../../mock/mockData';
-
-const sortTypes = ['Release date', 'Movie name', 'Rating'] as const;
-export type SortTypes = typeof sortTypes[number];
-export type OrderTypes = 'asc' | 'desc';
+import {
+  MovieListAction,
+  MovieListState,
+  sortTypes,
+  SortTypes,
+} from '../../../../hooks/useMovieList';
+import useSelector from '../../../../hooks/useSelector';
 
 export function SortToggler() {
   const [toggle, setToggle] = useState(false);
 
-  const [curType, setCurType] = useState<SortTypes>(sortTypes[0]);
-  const [order, setOrder] = useState<OrderTypes>('desc');
-
   const dispatch = useDispatch(
-    dispatches => dispatches.sortOrder
-  ) as Dispatch<SortOrderAction>;
+    dispatches => dispatches.movieList
+  ) as Dispatch<MovieListAction>;
+
+  const { sort } = useSelector(state => state.movieList) as MovieListState;
+
+  const { type, order } = sort;
 
   const handleToggle = () => {
     setToggle(prev => !prev);
   };
 
   const handleSelect = (type: SortTypes) => {
-    setCurType(type);
-  };
-
-  const handleSort = (type: SortTypes, order: OrderTypes = 'desc') => {
-    sortMovieList(type, order);
+    dispatch({ type: 'SORT_MOVIE', payload: { type, order } });
   };
 
   const handleOrder = () => {
-    setOrder(prev => (prev === 'desc' ? 'asc' : 'desc'));
+    dispatch({
+      type: 'SORT_MOVIE',
+      payload: { type, order: order === 'desc' ? 'asc' : 'desc' },
+    });
   };
-
-  useEffect(() => {
-    handleSort(curType, order);
-    dispatch({ type: order === 'asc' ? 'orderByAsc' : 'orderByDesc' });
-  }, [curType, dispatch, order]);
 
   return (
     <Container>
       <OptionsWrapper>
-        <Option onClick={handleToggle}>{curType}</Option>
+        <Option onClick={handleToggle}>{type}</Option>
         {toggle &&
           sortTypes
-            .filter(type => type !== curType)
-            .map((type, index) => (
+            .filter(t => t !== type)
+            .map((t, index) => (
               <Option
                 key={index}
                 onClick={() => {
-                  handleSelect(type);
+                  handleSelect(t);
                   handleToggle();
                 }}>
-                {type}
+                {t}
               </Option>
             ))}
       </OptionsWrapper>

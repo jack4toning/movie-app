@@ -6,7 +6,7 @@ import { CloseButton } from '../../Common';
 import useSelector from '../../../hooks/useSelector';
 import useDispatch from '../../../hooks/useDispatch';
 import { ModalAction, ModalState } from '../../../hooks/useModal';
-import { addMovie, editMovie } from '../../../mock/mockData';
+import { MovieListAction, MovieListState } from '../../../hooks/useMovieList';
 
 export default function ModalForm({
   formTitle,
@@ -16,9 +16,7 @@ export default function ModalForm({
   type: 'add' | 'edit';
 }) {
   const { modalForm } = useSelector(state => state.modal) as ModalState;
-  const dispatch = useDispatch(
-    dispatches => dispatches.modal
-  ) as Dispatch<ModalAction>;
+
   const {
     id,
     title,
@@ -78,24 +76,46 @@ export default function ModalForm({
     }));
   };
 
+  const movieListDispatch = useDispatch(
+    dispatches => dispatches.movieList
+  ) as Dispatch<MovieListAction>;
+
+  const modalDispatch = useDispatch(
+    dispatches => dispatches.modal
+  ) as Dispatch<ModalAction>;
+
+  const { sort, genreFilter } = useSelector(
+    state => state.movieList
+  ) as MovieListState;
+
   const handleSubmit = () => {
     if (type === 'add') {
-      addMovie({
-        ...formState,
-        rating: Number(formState.rating),
-        runtime: Number(formState.runtime),
+      movieListDispatch({
+        type: 'ADD_MOVIE',
+        payload: {
+          ...formState,
+          rating: Number(formState.rating),
+          runtime: Number(formState.runtime),
+        },
       });
-      dispatch({ type: 'closeModal', payload: 'add' });
+      movieListDispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
+      movieListDispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
+      modalDispatch({ type: 'closeModal', payload: 'add' });
     } else if (type === 'edit') {
-      editMovie({
-        ...formState,
-        id,
-        rating: Number(formState.rating),
-        runtime: Number(formState.runtime),
+      movieListDispatch({
+        type: 'EDIT_MOVIE',
+        payload: {
+          ...formState,
+          id,
+          rating: Number(formState.rating),
+          runtime: Number(formState.runtime),
+        },
       });
-      dispatch({ type: 'closeModal', payload: 'edit' });
+      movieListDispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
+      movieListDispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
+      modalDispatch({ type: 'closeModal', payload: 'edit' });
     }
-    dispatch({ type: 'clearModalForm' });
+    modalDispatch({ type: 'clearModalForm' });
   };
 
   const handleChangeMovieTitie = (e: any) => {

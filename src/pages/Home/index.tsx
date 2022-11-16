@@ -9,7 +9,6 @@ import {
   DelModal,
 } from '../../components/Home';
 import styled from 'styled-components';
-import { movieList } from '../../mock/mockData';
 import useSelector from '../../hooks/useSelector';
 import { ModalState } from '../../hooks/useModal';
 
@@ -37,7 +36,7 @@ export function Home() {
   return (
     <Container>
       <Header />
-      <Content movieList={movieList} isModalOpen={isModalOpen} />
+      <Content isModalOpen={isModalOpen} />
       <Footer />
       {addModalOpen && <AddModal />}
       {editModalOpen && <EditModal />}

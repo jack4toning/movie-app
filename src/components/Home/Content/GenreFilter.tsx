@@ -1,23 +1,40 @@
-import React, { useState } from 'react';
+import React, { Dispatch } from 'react';
 import styled from 'styled-components';
+import useDispatch from '../../../hooks/useDispatch';
+import {
+  genreFilters,
+  GenreFilters,
+  MovieListAction,
+  MovieListState,
+} from '../../../hooks/useMovieList';
+import useSelector from '../../../hooks/useSelector';
 
 export function GenreFilter() {
-  const genres = ['All', 'Documentary', 'Comedy', 'Horror', 'Crime', 'Other'];
+  const dispatch = useDispatch(
+    dispatches => dispatches.movieList
+  ) as Dispatch<MovieListAction>;
 
-  const [curGenre, setCurGenre] = useState(genres[0]);
+  const { genreFilter, sort } = useSelector(
+    state => state.movieList
+  ) as MovieListState;
+
+  const handleFilter = (genreFilter: GenreFilters) => {
+    dispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
+    dispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
+  };
 
   return (
     <Container>
-      {genres.map((genre, index) => (
+      {genreFilters.map((gf, index) => (
         <Genre
           key={index}
           style={
-            genre === curGenre ? { borderBottom: '2px solid #f65261' } : {}
+            gf === genreFilter ? { borderBottom: '2px solid #f65261' } : {}
           }
           onClick={() => {
-            setCurGenre(genre);
+            handleFilter(gf);
           }}>
-          {genre}
+          {gf}
         </Genre>
       ))}
     </Container>

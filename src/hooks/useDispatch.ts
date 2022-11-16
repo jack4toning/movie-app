@@ -1,9 +1,9 @@
 import { useContext } from 'react';
-import { ModalDispatchContext, SortOrderDispatchContext } from '../context';
+import { MovieListDispatchContext, ModalDispatchContext } from '../context';
 
 type dispatchTypes = {
   modal: string;
-  sortOrder: string;
+  movieList: string;
 };
 
 type selectFn = (
@@ -12,15 +12,15 @@ type selectFn = (
 
 const dispatches: dispatchTypes = {
   modal: 'modal',
-  sortOrder: 'sortOrder',
+  movieList: 'movieList',
 };
 
 const useDispatch = (selectFn: selectFn) => {
   const dispatchType = selectFn(dispatches);
   const modalDispatch = useContext(ModalDispatchContext);
-  const sortOrderDispatch = useContext(SortOrderDispatchContext);
+  const movieListDispatch = useContext(MovieListDispatchContext);
   if (dispatchType === 'modal') return modalDispatch;
-  else if (dispatchType === 'sortOrder') return sortOrderDispatch;
+  else if (dispatchType === 'movieList') return movieListDispatch;
   else throw new Error('Bad selector!');
 };
 

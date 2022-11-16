@@ -1,29 +1,29 @@
 import React from 'react';
 import './App.css';
 import { Home } from './pages';
-import useModal from './hooks/useModal';
 import {
   ModalStateContext,
   ModalDispatchContext,
-  SortOrderStateContext,
-  SortOrderDispatchContext,
+  MovieListStateContext,
+  MovieListDispatchContext,
 } from './context';
-import useSortOrder from './hooks/useSortOrder';
+import useModal from './hooks/useModal';
+import useMovieList from './hooks/useMovieList';
 
 function App() {
   const { modalState, dispatch: modalDispatch } = useModal();
-  const { sortOrderState, dispatch: sortOrderDispatch } = useSortOrder();
+  const { movieListState, dispatch: movieListDispatch } = useMovieList();
 
   return (
     <ModalStateContext.Provider value={modalState}>
       <ModalDispatchContext.Provider value={modalDispatch}>
-        <SortOrderStateContext.Provider value={sortOrderState}>
-          <SortOrderDispatchContext.Provider value={sortOrderDispatch}>
+        <MovieListStateContext.Provider value={movieListState}>
+          <MovieListDispatchContext.Provider value={movieListDispatch}>
             <div className='App'>
               <Home />
             </div>
-          </SortOrderDispatchContext.Provider>
-        </SortOrderStateContext.Provider>
+          </MovieListDispatchContext.Provider>
+        </MovieListStateContext.Provider>
       </ModalDispatchContext.Provider>
     </ModalStateContext.Provider>
   );
