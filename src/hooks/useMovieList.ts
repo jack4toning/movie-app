@@ -15,7 +15,7 @@ type Movie = {
   runtime: number;
 };
 
-type LocalMovie = {
+export type LocalMovie = {
   id?: number;
   title: string;
   rating: number;
@@ -64,6 +64,7 @@ export type MovieListState = {
   focusMovieId: number;
   genreFilter: GenreFilters;
   sort: Sort;
+  selectedMovie: LocalMovie | null;
 };
 
 const movieList = [
@@ -222,6 +223,7 @@ export const initialState: MovieListState = {
   focusMovieId: -1,
   genreFilter: genreFilters[0],
   sort: { type: sortTypes[0], order: orderTypes[0] },
+  selectedMovie: null,
 };
 
 export type MovieListAction =
@@ -230,7 +232,8 @@ export type MovieListAction =
   | { type: 'DELETE_MOVIE'; payload: MovieId }
   | { type: 'SORT_MOVIE'; payload: Sort }
   | { type: 'FOCUS_ON_MOVIE'; payload: MovieId }
-  | { type: 'FILTER_MOVIE'; payload: GenreFilter };
+  | { type: 'FILTER_MOVIE'; payload: GenreFilter }
+  | { type: 'SELECT_MOVIE'; payload: LocalMovie | null };
 
 const useMovieList = () => {
   const MovieListReducer = (
@@ -411,6 +414,12 @@ const useMovieList = () => {
               genreFilter,
             };
         }
+      }
+      case 'SELECT_MOVIE': {
+        return {
+          ...prevState,
+          selectedMovie: action.payload,
+        };
       }
       default:
         throw new Error('Bad action!');

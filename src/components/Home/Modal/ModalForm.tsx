@@ -7,6 +7,7 @@ import useSelector from '../../../hooks/useSelector';
 import useDispatch from '../../../hooks/useDispatch';
 import { ModalAction, ModalState } from '../../../hooks/useModal';
 import { MovieListAction, MovieListState } from '../../../hooks/useMovieList';
+import { formatRuntime } from '../../../utils';
 
 export default function ModalForm({
   formTitle,
@@ -46,7 +47,7 @@ export default function ModalForm({
   const hmRuntime =
     formRuntime === -1 || Number.isNaN(formRuntime)
       ? ''
-      : `${Math.floor(formRuntime / 60)}h ${formRuntime % 60}min`;
+      : formatRuntime(formRuntime);
 
   // avoid NaN or <0 input
   const excludeWrongNum = (numStr: string) => {
@@ -211,7 +212,7 @@ export default function ModalForm({
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>overview</SmallTitle>
-          <TextArea
+          <Overview
             placeholder='Movie description'
             value={formState.overview}
             onChange={handleChangeMovieOverview}
@@ -288,7 +289,7 @@ const HMIndicator = styled(ShortInput)`
   left: 0; */
 `;
 
-const TextArea = styled.textarea`
+const Overview = styled.textarea`
   width: 856px;
   height: 197px;
   padding: 18px 0 0 21px;

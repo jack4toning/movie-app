@@ -11,6 +11,8 @@ import {
 import styled from 'styled-components';
 import useSelector from '../../hooks/useSelector';
 import { ModalState } from '../../hooks/useModal';
+import SelectedMovie from '../../components/Home/SelectedMovie';
+import { MovieListState } from '../../hooks/useMovieList';
 
 export function Home() {
   const { modalOpen } = useSelector(state => state.modal) as ModalState;
@@ -33,9 +35,17 @@ export function Home() {
     }
   }, [isModalOpen]);
 
+  const { selectedMovie } = useSelector(
+    state => state.movieList
+  ) as MovieListState;
+
+  useEffect(() => {
+    selectedMovie && window.scrollTo({ top: 0, left: 0 });
+  }, [selectedMovie]);
+
   return (
     <Container>
-      <Header />
+      {selectedMovie ? <SelectedMovie movie={selectedMovie} /> : <Header />}
       <Content isModalOpen={isModalOpen} />
       <Footer />
       {addModalOpen && <AddModal />}

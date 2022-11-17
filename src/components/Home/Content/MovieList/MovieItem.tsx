@@ -5,6 +5,7 @@ import miniCloseButton from '../../../../assets/images/miniCloseButton.svg';
 import useDispatch from '../../../../hooks/useDispatch';
 import { ModalAction } from '../../../../hooks/useModal';
 import { MovieListAction } from '../../../../hooks/useMovieList';
+import { getGenreStr } from '../../../../utils';
 
 export function MovieItem({ movie }: { movie: any }) {
   const {
@@ -20,34 +21,49 @@ export function MovieItem({ movie }: { movie: any }) {
 
   const releaseYear = releaseDate.split('-')[0];
 
-  const getGenreStr = (genres: string[]) => {
-    const len = genres.length;
-
-    if (len >= 3) return genres.join(', ');
-    return genres.join(' & ');
-  };
-
   const [showMenuIcon, setShowMenuIcon] = useState(false);
   const [showMenuIconContent, setShowMenuContent] = useState(false);
 
-  const handleMouseEnter = () => {
-    setShowMenuIcon(true);
-  };
-  const handleMouseLeave = () => {
-    setShowMenuIcon(false);
-    setShowMenuContent(false);
-  };
-  const handleMenuIconClick = () => {
-    setShowMenuContent(true);
-    setShowMenuIcon(false);
-  };
-  const handleCloseButtonClick = () => {
-    setShowMenuContent(false);
-  };
+  const movieListDispatch = useDispatch(
+    dispatches => dispatches.movieList
+  ) as Dispatch<MovieListAction>;
 
   const modalDispatch = useDispatch(
     dispatches => dispatches.modal
   ) as Dispatch<ModalAction>;
+
+  const handleHoverMovie = () => {
+    setShowMenuIcon(true);
+  };
+
+  const handleLeaveMovie = () => {
+    setShowMenuIcon(false);
+    setShowMenuContent(false);
+  };
+
+  const handleClickPoster = () => {
+    movieListDispatch({
+      type: 'SELECT_MOVIE',
+      payload: {
+        title,
+        rating,
+        releaseDate,
+        movieUrl,
+        overview,
+        genres,
+        runtime,
+      },
+    });
+  };
+
+  const handleMenuIconClick = () => {
+    setShowMenuContent(true);
+    setShowMenuIcon(false);
+  };
+
+  const handleCloseButtonClick = () => {
+    setShowMenuContent(false);
+  };
 
   const handleEdit = () => {
     setShowMenuContent(false);
@@ -67,10 +83,6 @@ export function MovieItem({ movie }: { movie: any }) {
     });
   };
 
-  const movieListDispatch = useDispatch(
-    dispatches => dispatches.movieList
-  ) as Dispatch<MovieListAction>;
-
   const handleDelete = () => {
     setShowMenuContent(false);
     modalDispatch({ type: 'openModal', payload: 'del' });
@@ -78,7 +90,7 @@ export function MovieItem({ movie }: { movie: any }) {
   };
 
   return (
-    <Container onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <Container onMouseEnter={handleHoverMovie} onMouseLeave={handleLeaveMovie}>
       <ContextMenuIcon
         style={{ opacity: showMenuIcon ? '1' : '0' }}
         onClick={handleMenuIconClick}
@@ -90,7 +102,7 @@ export function MovieItem({ movie }: { movie: any }) {
           <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
         </ContextMenuContent>
       )}
-      <Poster src={movieUrl} alt='poster' />
+      <Poster src={movieUrl} alt='poster' onClick={handleClickPoster} />
       <Wrapper>
         <MovieName>{title}</MovieName>
         <ReleaseYear>{releaseYear}</ReleaseYear>
@@ -190,6 +202,7 @@ const DeleteButton = styled(Button)`
 const Poster = styled.img`
   width: 322px;
   height: 455px;
+  cursor: pointer;
 `;
 
 const Wrapper = styled.div`

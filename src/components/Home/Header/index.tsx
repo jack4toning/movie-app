@@ -20,5 +20,4 @@ const Container = styled.div`
   height: 396px;
   width: 1200px;
   background: url(${movieBackground}) #000;
-  margin-bottom: 10px;
 `;

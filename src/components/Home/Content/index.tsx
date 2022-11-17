@@ -70,6 +70,7 @@ const Container = styled.div`
   padding: 0 60px 23px 60px;
   /* overflow: hidden; */
   /* margin-bottom: 10px; */
+  margin-top: 10px;
 `;
 
 const FilterSorterWrapper = styled.div`
