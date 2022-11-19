@@ -41,7 +41,7 @@ export function Home() {
 
   useEffect(() => {
     selectedMovie && window.scrollTo({ top: 0, left: 0 });
-  }, [selectedMovie]);
+  }, []);
 
   return (
     <Container>
