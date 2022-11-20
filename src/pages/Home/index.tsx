@@ -9,49 +9,44 @@ import {
   DelModal,
 } from '../../components/Home';
 import styled from 'styled-components';
-import useSelector from '../../hooks/useSelector';
-import { ModalState } from '../../hooks/useModal';
 import SelectedMovie from '../../components/Home/SelectedMovie';
-import { MovieListState } from '../../hooks/useMovieList';
+import { useSelector } from '../../store/hooks';
 
 export function Home() {
-  const { modalOpen } = useSelector(state => state.modal) as ModalState;
-  const { addModalOpen, editModalOpen, delModalOpen, infoModalOpen } =
-    modalOpen;
+  const { addToggle, editToggle, delToggle, infoToggle } = useSelector(
+    state => state.modal
+  );
 
-  const isModalOpen =
-    addModalOpen || editModalOpen || delModalOpen || infoModalOpen;
+  const modalToggle = addToggle || editToggle || delToggle || infoToggle;
 
-  const coordinate = useRef({ topLeft: { top: 0, left: 0 }, isModalOpen });
+  const coordinate = useRef({ topLeft: { top: 0, left: 0 }, modalToggle });
 
-  if (isModalOpen !== coordinate.current.isModalOpen)
+  if (modalToggle !== coordinate.current.modalToggle)
     coordinate.current.topLeft = { top: window.scrollY, left: window.scrollX };
 
   useEffect(() => {
-    if (isModalOpen) {
+    if (modalToggle) {
       window.scrollTo({ top: 0, left: 0 });
     } else {
       window.scrollTo(coordinate.current.topLeft);
     }
-  }, [isModalOpen]);
+  }, [modalToggle]);
 
-  const { selectedMovie } = useSelector(
-    state => state.movieList
-  ) as MovieListState;
+  const { data: selectedMovie } = useSelector(state => state.selectedMovie);
 
   useEffect(() => {
     selectedMovie && window.scrollTo({ top: 0, left: 0 });
-  }, []);
+  }, [selectedMovie]);
 
   return (
     <Container>
       {selectedMovie ? <SelectedMovie movie={selectedMovie} /> : <Header />}
-      <Content isModalOpen={isModalOpen} />
+      <Content modalToggle={modalToggle} />
       <Footer />
-      {addModalOpen && <AddModal />}
-      {editModalOpen && <EditModal />}
-      {delModalOpen && <DelModal />}
-      {infoModalOpen && <InfoModal />}
+      {addToggle && <AddModal />}
+      {editToggle && <EditModal />}
+      {delToggle && <DelModal />}
+      {infoToggle && <InfoModal />}
     </Container>
   );
 }

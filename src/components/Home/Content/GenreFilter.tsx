@@ -1,26 +1,19 @@
-import React, { Dispatch } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import useDispatch from '../../../hooks/useDispatch';
 import {
-  genreFilters,
+  fetchMovieList,
   GenreFilters,
-  MovieListAction,
-  MovieListState,
-} from '../../../hooks/useMovieList';
-import useSelector from '../../../hooks/useSelector';
+  genreFilters,
+} from '../../../store/features/movieListSlice';
+import { useDispatch } from '../../../store/hooks';
 
 export function GenreFilter() {
-  const dispatch = useDispatch(
-    dispatches => dispatches.movieList
-  ) as Dispatch<MovieListAction>;
+  const [genreFilter, setGenreFilter] = useState<GenreFilters>(genreFilters[0]);
 
-  const { genreFilter, sort } = useSelector(
-    state => state.movieList
-  ) as MovieListState;
+  const dispatch = useDispatch();
 
   const handleFilter = (genreFilter: GenreFilters) => {
-    dispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
-    dispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
+    dispatch(fetchMovieList({ filter: [genreFilter] }));
   };
 
   return (
@@ -32,6 +25,7 @@ export function GenreFilter() {
             gf === genreFilter ? { borderBottom: '2px solid #f65261' } : {}
           }
           onClick={() => {
+            setGenreFilter(gf);
             handleFilter(gf);
           }}>
           {gf}

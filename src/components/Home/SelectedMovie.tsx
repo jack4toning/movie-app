@@ -1,22 +1,30 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import magnifier from '../../assets/images/magnifier.svg';
-import useDispatch from '../../hooks/useDispatch';
-import { LocalMovie, MovieListAction } from '../../hooks/useMovieList';
+import {
+  clearSelectedMovie,
+  Movie,
+} from '../../store/features/selectedMovieSlice';
+import { useDispatch } from '../../store/hooks';
 import { formatRuntime, getGenreStr } from '../../utils';
 
-export default function SelectedMovie({ movie }: { movie: LocalMovie }) {
-  const { title, rating, releaseDate, movieUrl, overview, genres, runtime } =
-    movie;
+export default function SelectedMovie({ movie }: { movie: Movie }) {
+  const {
+    title,
+    vote_average: rating,
+    release_date: releaseDate,
+    poster_path: movieUrl,
+    overview,
+    genres,
+    runtime,
+  } = movie;
+
+  const dispatch = useDispatch();
 
   const releaseYear = releaseDate.split('-')[0];
 
-  const dispatch = useDispatch(
-    dispatches => dispatches.movieList
-  ) as Dispatch<MovieListAction>;
-
   const handleMagnifierClick = () => {
-    dispatch({ type: 'SELECT_MOVIE', payload: null });
+    dispatch(clearSelectedMovie());
   };
 
   return (

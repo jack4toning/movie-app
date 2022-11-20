@@ -26,14 +26,14 @@ export const formSlice = createSlice({
   name: 'modal/form',
   initialState: defaultForm,
   reducers: {
-    fill: (state, action) => {
+    fillForm: (state, action) => {
       state = action.payload;
     },
-    clear: state => {
+    clearForm: state => {
       state = defaultForm;
     },
   },
 });
 
-export const { fill, clear } = formSlice.actions;
+export const { fillForm, clearForm } = formSlice.actions;
 export default formSlice.reducer;
