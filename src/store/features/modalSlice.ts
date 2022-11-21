@@ -16,7 +16,6 @@ type Modal = {
 
 type ModalTypes = 'add' | 'edit' | 'del' | 'info';
 type Action = {
-  type: string;
   payload: ModalTypes;
 };
 
@@ -24,11 +23,11 @@ export const modalSlice = createSlice({
   name: 'modal',
   initialState: defaultModal,
   reducers: {
-    toggleForm: (state, action: Action) => {
+    toggleModal: (state, action: Action) => {
       state[`${action.payload}Toggle`] = !state[`${action.payload}Toggle`];
     },
   },
 });
 
-export const { toggleForm } = modalSlice.actions;
+export const { toggleModal } = modalSlice.actions;
 export default modalSlice.reducer;

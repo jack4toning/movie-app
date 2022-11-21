@@ -1,8 +1,9 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import closeButton from '../../assets/images/closeButton.svg';
-import useDispatch from '../../hooks/useDispatch';
-import { ModalAction } from '../../hooks/useModal';
+import { clearForm } from '../../store/features/formSlice';
+import { toggleModal } from '../../store/features/modalSlice';
+import { useDispatch } from '../../store/hooks';
 
 export const CloseButton = ({
   position,
@@ -11,13 +12,11 @@ export const CloseButton = ({
   position: number;
   modalType: 'add' | 'edit' | 'del' | 'info';
 }) => {
-  const dispatch = useDispatch(
-    dispatches => dispatches.modal
-  ) as Dispatch<ModalAction>;
+  const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch({ type: 'closeModal', payload: modalType });
-    dispatch({ type: 'clearModalForm' });
+    dispatch(toggleModal(modalType));
+    dispatch(clearForm());
   };
 
   return <SCCloseButton position={position} onClick={handleClick} />;

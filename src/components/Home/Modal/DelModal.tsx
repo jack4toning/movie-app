@@ -1,32 +1,17 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import ModalContainer from './ModalContainer';
 import styled from 'styled-components';
 import { CloseButton } from '../../Common';
-import useDispatch from '../../../hooks/useDispatch';
-import { MovieListAction, MovieListState } from '../../../hooks/useMovieList';
-import useSelector from '../../../hooks/useSelector';
-import { ModalAction } from '../../../hooks/useModal';
+import { useDispatch, useSelector } from '../../../store/hooks';
+import { deleteMovie } from '../../../store/features/movieListSlice';
 
 export function DelModal() {
-  const modalDispatch = useDispatch(
-    dispatches => dispatches.modal
-  ) as Dispatch<ModalAction>;
-
-  const movieListDispatch = useDispatch(
-    dispatches => dispatches.movieList
-  ) as Dispatch<MovieListAction>;
-
-  const {
-    focusMovieId: id,
-    genreFilter,
-    sort,
-  } = useSelector(state => state.movieList) as MovieListState;
+  const dispatch = useDispatch();
+  const { data } = useSelector(state => state.selectedMovie);
+  const focusId = data.focusId;
 
   const handleConfirm = () => {
-    movieListDispatch({ type: 'DELETE_MOVIE', payload: { id } });
-    movieListDispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
-    movieListDispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
-    modalDispatch({ type: 'closeModal', payload: 'del' });
+    dispatch(deleteMovie(focusId));
   };
 
   return (

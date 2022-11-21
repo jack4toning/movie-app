@@ -1,39 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-export type Movie = {
-  id: number;
-  title: string;
-  tagline: string;
-  vote_average: number;
-  vote_count: number;
-  release_date: string;
-  poster_path: string;
-  overview: string;
-  budget: number;
-  revenue: number;
-  genres: string[];
-  runtime: number;
-};
-
-type Error = {
-  messages: string[];
-};
+import { Error, Movie } from './movieListSlice';
 
 type MovieState = {
   loading: boolean;
   error: Error | null;
-  data: null;
+  data: MovieData;
 };
+
+type MovieData = {
+  movie: Movie | null;
+  focusId: number;
+};
+
+const defaultMovieData = { movie: null, focusId: -1 };
 
 export const defaultState: MovieState = {
   loading: false,
   error: null,
-  data: null,
+  data: defaultMovieData,
 };
 
 export const fetchMovie = createAsyncThunk<
   Movie,
-  string,
+  number,
   {
     extra: {
       jwt: string;
@@ -41,7 +30,7 @@ export const fetchMovie = createAsyncThunk<
     rejectValue: Error;
   }
 >('movie/fetchMovie', async (id, thunkApi) => {
-  const response = await fetch(`http://localhost:4000/movies?id=${id}`);
+  const response = await fetch(`http://localhost:4000/movies/${id}`);
 
   if (response.status === 404) {
     return thunkApi.rejectWithValue({ messages: ['404 not found'] });
@@ -54,8 +43,11 @@ export const selectedMovieSlice = createSlice({
   name: 'selectedMovie',
   initialState: defaultState,
   reducers: {
+    selectMovie: (state, action) => {
+      state.data.focusId = action.payload;
+    },
     clearSelectedMovie: state => {
-      state.data = null;
+      state.data = defaultMovieData;
     },
   },
   extraReducers: {
@@ -73,5 +65,5 @@ export const selectedMovieSlice = createSlice({
   },
 });
 
-export const { clearSelectedMovie } = selectedMovieSlice.actions;
+export const { selectMovie, clearSelectedMovie } = selectedMovieSlice.actions;
 export default selectedMovieSlice.reducer;

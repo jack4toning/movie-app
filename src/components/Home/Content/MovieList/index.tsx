@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Movie } from '../../../../store/features/movieListSlice';
 import { MovieItem } from './MovieItem';
 
-export function MovieList({ movieList }: { movieList: any[] }) {
+export function MovieList({ movieList }: { movieList: Movie[] }) {
   return (
     <Container>
       {movieList.map(movie => (

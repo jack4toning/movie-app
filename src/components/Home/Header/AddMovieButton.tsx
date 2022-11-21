@@ -1,17 +1,15 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import useDispatch from '../../../hooks/useDispatch';
-import { ModalAction } from '../../../hooks/useModal';
+import { toggleModal } from '../../../store/features/modalSlice';
+import { useDispatch } from '../../../store/hooks';
 
 export default function AddMovieButton() {
-  const dispatch = useDispatch(
-    dispatches => dispatches.modal
-  ) as Dispatch<ModalAction>;
+  const dispatch = useDispatch();
 
   return (
     <Button
       onClick={() => {
-        dispatch({ type: 'openModal', payload: 'add' });
+        dispatch(toggleModal('add'));
       }}>
       + ADD MOVIE
     </Button>

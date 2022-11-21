@@ -1,22 +1,21 @@
-import React, { Dispatch, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import threeDots from '../../../../assets/images/threeDots.svg';
 import miniCloseButton from '../../../../assets/images/miniCloseButton.svg';
-import useDispatch from '../../../../hooks/useDispatch';
-import { ModalAction } from '../../../../hooks/useModal';
-import { MovieListAction } from '../../../../hooks/useMovieList';
 import { getGenreStr } from '../../../../utils';
+import { fetchMovie } from '../../../../store/features/formSlice';
+import { useDispatch } from '../../../../store/hooks';
+import { toggleModal } from '../../../../store/features/modalSlice';
+import { Movie } from '../../../../store/features/movieListSlice';
+import { selectMovie } from '../../../../store/features/selectedMovieSlice';
 
-export function MovieItem({ movie }: { movie: any }) {
+export function MovieItem({ movie }: { movie: Movie }) {
   const {
     id,
     poster_path: movieUrl,
     title,
     release_date: releaseDate,
     genres,
-    overview,
-    vote_average: rating,
-    runtime,
   } = movie;
 
   const releaseYear = releaseDate.split('-')[0];
@@ -24,13 +23,7 @@ export function MovieItem({ movie }: { movie: any }) {
   const [showMenuIcon, setShowMenuIcon] = useState(false);
   const [showMenuIconContent, setShowMenuContent] = useState(false);
 
-  const movieListDispatch = useDispatch(
-    dispatches => dispatches.movieList
-  ) as Dispatch<MovieListAction>;
-
-  const modalDispatch = useDispatch(
-    dispatches => dispatches.modal
-  ) as Dispatch<ModalAction>;
+  const dispatch = useDispatch();
 
   const handleHoverMovie = () => {
     setShowMenuIcon(true);
@@ -42,18 +35,7 @@ export function MovieItem({ movie }: { movie: any }) {
   };
 
   const handleClickPoster = () => {
-    movieListDispatch({
-      type: 'SELECT_MOVIE',
-      payload: {
-        title,
-        rating,
-        releaseDate,
-        movieUrl,
-        overview,
-        genres,
-        runtime,
-      },
-    });
+    dispatch(fetchMovie(id));
   };
 
   const handleMenuIconClick = () => {
@@ -67,26 +49,14 @@ export function MovieItem({ movie }: { movie: any }) {
 
   const handleEdit = () => {
     setShowMenuContent(false);
-    modalDispatch({ type: 'openModal', payload: 'edit' });
-    modalDispatch({
-      type: 'fillModalForm',
-      payload: {
-        id,
-        title,
-        releaseDate,
-        movieUrl,
-        rating,
-        genres,
-        runtime,
-        overview,
-      },
-    });
+    dispatch(toggleModal('edit'));
+    dispatch(fetchMovie(id));
   };
 
   const handleDelete = () => {
     setShowMenuContent(false);
-    modalDispatch({ type: 'openModal', payload: 'del' });
-    movieListDispatch({ type: 'FOCUS_ON_MOVIE', payload: { id } });
+    dispatch(toggleModal('del'));
+    dispatch(selectMovie(id));
   };
 
   return (

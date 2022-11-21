@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { GenreFilter } from './GenreFilter';
 import { Sorter } from './Sorter';
 import { MovieList } from './MovieList';
-import { useSelector } from '../../../store/hooks';
+import { useSelector, useDispatch } from '../../../store/hooks';
+import { fetchMovieList } from '../../../store/features/movieListSlice';
 
 export function Content(props: { modalToggle: boolean }) {
   const { modalToggle } = props;
 
+  const dispatch = useDispatch();
   const { data } = useSelector(state => state.movieList);
   const movieList = data.data;
+
+  useEffect(() => {
+    dispatch(fetchMovieList());
+  }, [dispatch]);
 
   return (
     <Container modalToggle={modalToggle}>

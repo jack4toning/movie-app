@@ -1,10 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import magnifier from '../../assets/images/magnifier.svg';
-import {
-  clearSelectedMovie,
-  Movie,
-} from '../../store/features/selectedMovieSlice';
+import { Movie } from '../../store/features/movieListSlice';
+import { clearSelectedMovie } from '../../store/features/selectedMovieSlice';
 import { useDispatch } from '../../store/hooks';
 import { formatRuntime, getGenreStr } from '../../utils';
 

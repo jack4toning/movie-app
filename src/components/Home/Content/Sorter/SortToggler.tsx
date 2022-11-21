@@ -2,43 +2,50 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import triangle from '../../../../assets/images/triangle.svg';
 import {
+  changeSortBy,
+  changeSortOrder,
   fetchMovieList,
-  orderTypes,
-  OrderTypes,
   sortTypes,
   SortTypes,
 } from '../../../../store/features/movieListSlice';
-import { useDispatch } from '../../../../store/hooks';
+import { useDispatch, useSelector } from '../../../../store/hooks';
 
 export function SortToggler() {
   const [toggle, setToggle] = useState(false);
-  const [sortType, setSortType] = useState<SortTypes>(sortTypes[0]);
-  const [orderType, setOrderType] = useState<OrderTypes>(orderTypes[0]);
 
   const dispatch = useDispatch();
+  const { data } = useSelector(state => state.movieList);
+  const { sortBy, sortOrder } = data.fetchOptions;
+
+  const transformSortBy = (sortBy: SortTypes) => {
+    let transformedSortBy = '';
+    if (sortBy === 'release_date') transformedSortBy = 'Release date';
+    else transformedSortBy = 'Rating';
+    return transformedSortBy.toLocaleUpperCase();
+  };
 
   const handleToggle = () => {
     setToggle(prev => !prev);
   };
 
   const handleSelect = (sortType: SortTypes) => {
-    setSortType(sortType);
-    dispatch(fetchMovieList({ sortBy: sortType, sortOrder: orderType }));
+    dispatch(changeSortBy(sortType));
+    dispatch(fetchMovieList());
   };
 
   const handleOrder = () => {
-    const sortOrder = orderType === 'asc' ? 'desc' : 'asc';
-    setOrderType(sortOrder);
-    dispatch(fetchMovieList({ sortBy: sortType, sortOrder }));
+    const sOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    dispatch(changeSortOrder(sOrder));
+    dispatch(fetchMovieList());
   };
 
   return (
     <Container>
       <OptionsWrapper>
-        <Option onClick={handleToggle}>{sortType}</Option>
+        <Option onClick={handleToggle}>{transformSortBy(sortBy)}</Option>
         {toggle &&
           sortTypes
-            .filter(st => st !== sortType)
+            .filter(st => st !== sortBy)
             .map((st, index) => (
               <Option
                 key={index}
@@ -46,12 +53,12 @@ export function SortToggler() {
                   handleSelect(st);
                   handleToggle();
                 }}>
-                {st}
+                {transformSortBy(st)}
               </Option>
             ))}
       </OptionsWrapper>
       <Triangle
-        style={{ transform: `rotateX(${orderType === 'asc' ? '180deg' : 0})` }}
+        style={{ transform: `rotateX(${sortOrder === 'asc' ? '180deg' : 0})` }}
         onClick={() => {
           handleOrder();
         }}

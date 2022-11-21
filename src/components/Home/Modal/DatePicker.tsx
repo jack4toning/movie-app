@@ -23,6 +23,10 @@ export default function DatePicker({
   const [open, setOpen] = useState(false);
   const iconRef = useRef(null);
 
+  useEffect(() => {
+    setValue(dayjs(date));
+  }, [date]);
+
   const memoCloseCalendar = useCallback((e: any) => {
     // console.log(e.target);
     if (e.target !== iconRef.current) setOpen(false);

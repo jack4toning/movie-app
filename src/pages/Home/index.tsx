@@ -32,7 +32,8 @@ export function Home() {
     }
   }, [modalToggle]);
 
-  const { data: selectedMovie } = useSelector(state => state.selectedMovie);
+  const { data } = useSelector(state => state.selectedMovie);
+  const selectedMovie = data.movie;
 
   useEffect(() => {
     selectedMovie && window.scrollTo({ top: 0, left: 0 });

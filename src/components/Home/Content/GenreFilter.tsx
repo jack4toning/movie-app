@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {
+  changeFilter,
   fetchMovieList,
   GenreFilters,
   genreFilters,
 } from '../../../store/features/movieListSlice';
-import { useDispatch } from '../../../store/hooks';
+import { useDispatch, useSelector } from '../../../store/hooks';
 
 export function GenreFilter() {
-  const [genreFilter, setGenreFilter] = useState<GenreFilters>(genreFilters[0]);
-
   const dispatch = useDispatch();
+  const { data } = useSelector(state => state.movieList);
+  const { filter } = data.fetchOptions;
 
   const handleFilter = (genreFilter: GenreFilters) => {
-    dispatch(fetchMovieList({ filter: [genreFilter] }));
+    dispatch(changeFilter([genreFilter]));
+    dispatch(fetchMovieList());
   };
 
   return (
@@ -21,14 +23,11 @@ export function GenreFilter() {
       {genreFilters.map((gf, index) => (
         <Genre
           key={index}
-          style={
-            gf === genreFilter ? { borderBottom: '2px solid #f65261' } : {}
-          }
+          style={gf === filter[0] ? { borderBottom: '2px solid #f65261' } : {}}
           onClick={() => {
-            setGenreFilter(gf);
             handleFilter(gf);
           }}>
-          {gf}
+          {gf === '' ? 'All' : gf}
         </Genre>
       ))}
     </Container>

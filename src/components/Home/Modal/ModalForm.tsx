@@ -1,13 +1,13 @@
-import React, { Dispatch, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
 import { CloseButton } from '../../Common';
-import useSelector from '../../../hooks/useSelector';
-import useDispatch from '../../../hooks/useDispatch';
-import { ModalAction, ModalState } from '../../../hooks/useModal';
-import { MovieListAction, MovieListState } from '../../../hooks/useMovieList';
 import { formatRuntime } from '../../../utils';
+import { useDispatch, useSelector } from '../../../store/hooks';
+import { addMovie, editMovie } from '../../../store/features/movieListSlice';
+import { toggleModal } from '../../../store/features/modalSlice';
+import { clearForm } from '../../../store/features/formSlice';
 
 export default function ModalForm({
   formTitle,
@@ -16,34 +16,53 @@ export default function ModalForm({
   formTitle: string;
   type: 'add' | 'edit';
 }) {
-  const { modalForm } = useSelector(state => state.modal) as ModalState;
+  const { data: form } = useSelector(state => state.form);
+  const dispatch = useDispatch();
 
   const {
     id,
     title,
-    releaseDate,
-    movieUrl,
-    rating,
+    release_date: releaseDate,
+    poster_path: movieUrl,
+    vote_average: rating,
     genres,
     runtime,
     overview,
-  } = modalForm;
+  } = form;
 
-  const keep1DP = (num: number) => {
-    return num.toFixed(1);
+  console.log(form);
+
+  const keep1DP = (numStr: string) => {
+    // int should always be int. For example, 9.0 should be 9
+    return parseFloat(Number(numStr).toFixed(1));
   };
 
-  const [formState, setFormState] = useState({
+  const [localForm, setlocalForm] = useState({
     title,
     releaseDate,
     movieUrl,
-    rating: keep1DP(rating),
+    rating: String(rating),
     genres,
     runtime: String(runtime),
     overview,
   });
 
-  const formRuntime = Number(formState.runtime);
+  console.log(localForm);
+
+  useEffect(() => {
+    setlocalForm({
+      title,
+      releaseDate,
+      movieUrl,
+      rating: String(rating),
+      genres,
+      runtime: String(runtime),
+      overview,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const formRuntime = Number(localForm.runtime);
   const hmRuntime =
     formRuntime === -1 || Number.isNaN(formRuntime)
       ? ''
@@ -66,7 +85,7 @@ export default function ModalForm({
   };
 
   const handleReset = () => {
-    setFormState(() => ({
+    setlocalForm(() => ({
       title: '',
       releaseDate: '',
       movieUrl: '',
@@ -77,74 +96,64 @@ export default function ModalForm({
     }));
   };
 
-  const movieListDispatch = useDispatch(
-    dispatches => dispatches.movieList
-  ) as Dispatch<MovieListAction>;
-
-  const modalDispatch = useDispatch(
-    dispatches => dispatches.modal
-  ) as Dispatch<ModalAction>;
-
-  const { sort, genreFilter } = useSelector(
-    state => state.movieList
-  ) as MovieListState;
-
   const handleSubmit = () => {
+    const movieProps = {
+      title: localForm.title,
+      tagline: 'test',
+      vote_average: keep1DP(localForm.rating),
+      vote_count: 0,
+      release_date: localForm.releaseDate,
+      poster_path: localForm.movieUrl,
+      overview: localForm.overview,
+      budget: 0,
+      revenue: 0,
+      genres: localForm.genres,
+      runtime: Number(localForm.runtime),
+    };
+
+    console.log(movieProps);
+
     if (type === 'add') {
-      movieListDispatch({
-        type: 'ADD_MOVIE',
-        payload: {
-          ...formState,
-          rating: Number(formState.rating),
-          runtime: Number(formState.runtime),
-        },
-      });
-      movieListDispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
-      movieListDispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
-      modalDispatch({ type: 'closeModal', payload: 'add' });
+      dispatch(addMovie(movieProps));
+      dispatch(toggleModal('add'));
     } else if (type === 'edit') {
-      movieListDispatch({
-        type: 'EDIT_MOVIE',
-        payload: {
-          ...formState,
+      dispatch(
+        editMovie({
           id,
-          rating: Number(formState.rating),
-          runtime: Number(formState.runtime),
-        },
-      });
-      movieListDispatch({ type: 'FILTER_MOVIE', payload: { genreFilter } });
-      movieListDispatch({ type: 'SORT_MOVIE', payload: { ...sort } });
-      modalDispatch({ type: 'closeModal', payload: 'edit' });
+          ...movieProps,
+        })
+      );
+      dispatch(toggleModal('edit'));
     }
-    modalDispatch({ type: 'clearModalForm' });
+    dispatch(clearForm());
   };
 
   const handleChangeMovieTitie = (e: any) => {
-    setFormState(prev => ({ ...prev, title: e.target.value }));
+    setlocalForm(prev => ({ ...prev, title: e.target.value }));
   };
 
   const handleChangeReleaseDate = (releaseDate: string) => {
-    setFormState(prev => ({ ...prev, releaseDate }));
+    setlocalForm(prev => ({ ...prev, releaseDate }));
   };
 
   const handleChangeMovieUrl = (e: any) => {
-    setFormState(prev => ({ ...prev, movieUrl: e.target.value }));
+    setlocalForm(prev => ({ ...prev, movieUrl: e.target.value }));
   };
 
   const handleChangeMovieRating = (e: any) => {
-    setFormState(prev => ({ ...prev, rating: e.target.value }));
+    setlocalForm(prev => ({ ...prev, rating: e.target.value }));
   };
 
   const handleChangeMovieGenres = (genres: string[]) => {
-    setFormState(prev => ({ ...prev, genres }));
+    setlocalForm(prev => ({ ...prev, genres }));
   };
 
   const handleChangeMovieRuntime = (e: any) => {
-    setFormState(prev => ({ ...prev, runtime: e.target.value }));
+    setlocalForm(prev => ({ ...prev, runtime: e.target.value }));
   };
 
   const handleChangeMovieOverview = (e: any) => {
-    setFormState(prev => ({ ...prev, overview: e.target.value }));
+    setlocalForm(prev => ({ ...prev, overview: e.target.value }));
   };
 
   return (
@@ -156,14 +165,14 @@ export default function ModalForm({
           <SmallTitle>title</SmallTitle>
           <LongInput
             placeholder='title'
-            value={formState.title}
+            value={localForm.title}
             onChange={handleChangeMovieTitie}
           />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>release date</SmallTitle>
           <DatePicker
-            date={formState.releaseDate}
+            date={localForm.releaseDate}
             onChange={handleChangeReleaseDate}
           />
         </OptionWrapper>
@@ -171,7 +180,7 @@ export default function ModalForm({
           <SmallTitle>movie url</SmallTitle>
           <LongInput
             placeholder='https://'
-            value={formState.movieUrl}
+            value={localForm.movieUrl}
             onChange={handleChangeMovieUrl}
           />
         </OptionWrapper>
@@ -179,14 +188,14 @@ export default function ModalForm({
           <SmallTitle>rating</SmallTitle>
           <ShortInput
             placeholder='7.8'
-            value={excludeWrongNum(formState.rating)}
+            value={excludeWrongNum(localForm.rating)}
             onChange={handleChangeMovieRating}
           />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>genre</SmallTitle>
           <GenreToggler
-            selectedGenres={formState.genres}
+            selectedGenres={localForm.genres}
             onChange={handleChangeMovieGenres}
           />
         </OptionWrapper>
@@ -196,7 +205,7 @@ export default function ModalForm({
             <ShortInput
               autoFocus
               placeholder='minutes'
-              value={excludeWrongNum(formState.runtime)}
+              value={excludeWrongNum(localForm.runtime)}
               onChange={handleChangeMovieRuntime}
               onMouseLeave={handleMouseLeaveHMI}
             />
@@ -205,6 +214,7 @@ export default function ModalForm({
             <HMIndicator
               placeholder='minutes'
               value={hmRuntime}
+              // TODO: 将这个组件单独创建一个文件，避免mouse enter事件导致整个表单重渲染
               onMouseEnter={handleMouseEnterHMI}
               onChange={() => {}}
             />
@@ -214,7 +224,7 @@ export default function ModalForm({
           <SmallTitle>overview</SmallTitle>
           <Overview
             placeholder='Movie description'
-            value={formState.overview}
+            value={localForm.overview}
             onChange={handleChangeMovieOverview}
           />
         </OptionWrapper>
