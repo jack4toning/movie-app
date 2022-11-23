@@ -170,6 +170,7 @@ const DeleteButton = styled(Button)`
 `;
 
 const Poster = styled.img`
+  display: block;
   width: 322px;
   height: 455px;
   cursor: pointer;
@@ -184,14 +185,20 @@ const Wrapper = styled.div`
 const MovieName = styled.div`
   font-size: 18px;
   opacity: 0.7;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
+
 const ReleaseYear = styled.div`
   font-size: 14px;
   opacity: 0.7;
   border: 1px solid #97979780;
   border-radius: 4px;
   padding: 3px 17px;
+  /* height: 26px; */
 `;
+
 const Genres = styled.div`
   font-size: 14px;
   opacity: 0.5;

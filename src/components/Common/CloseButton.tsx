@@ -14,12 +14,12 @@ export const CloseButton = ({
 }) => {
   const dispatch = useDispatch();
 
-  const handleClick = () => {
+  const handleClose = () => {
     dispatch(toggleModal(modalType));
     dispatch(clearForm());
   };
 
-  return <SCCloseButton position={position} onClick={handleClick} />;
+  return <SCCloseButton position={position} onClick={handleClose} />;
 };
 
 const SCCloseButton = styled.div`

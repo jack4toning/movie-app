@@ -1,19 +1,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '..';
+import { toggleModal } from './modalSlice';
 
 export type Movie = {
   id: number;
   title: string;
   tagline: string;
-  vote_average: number;
-  vote_count: number;
+  vote_average: number | string;
+  vote_count: number | string;
   release_date: string;
   poster_path: string;
   overview: string;
-  budget: number;
-  revenue: number;
+  budget: number | string;
+  revenue: number | string;
   genres: string[];
-  runtime: number;
+  runtime: number | string;
 };
 
 export const genreFilters = [
@@ -42,7 +43,7 @@ type FetchOptions = {
   limit: number;
 };
 
-type MovieWithoutId = Omit<Movie, 'id'>;
+export type MovieWithoutId = Omit<Movie, 'id'>;
 
 type MovieListData = {
   data: Movie[];
@@ -136,6 +137,7 @@ export const addMovie = createAsyncThunk<
   }
 
   thunkApi.dispatch(fetchMovieList());
+  thunkApi.dispatch(toggleModal('info'));
 });
 
 export const editMovie = createAsyncThunk<
@@ -180,7 +182,7 @@ export const deleteMovie = createAsyncThunk<
     rejectValue: Error;
   }
 >('movieList/deleteMovie', async (id, thunkApi) => {
-  const response = await fetch(`http://localhost:4000/movies?id=${id}`, {
+  const response = await fetch(`http://localhost:4000/movies/${id}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${thunkApi.extra.jwt}` },
   });

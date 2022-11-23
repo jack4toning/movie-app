@@ -45,7 +45,7 @@ const Container = styled.div`
     modalToggle ? '953px' : 'auto'};
   background: #232323;
   padding: 0 60px 23px 60px;
-  /* overflow: hidden; */
+  overflow: hidden;
   /* margin-bottom: 10px; */
   margin-top: 10px;
 `;

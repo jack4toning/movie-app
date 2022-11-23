@@ -11,11 +11,49 @@ import { useDispatch, useSelector } from '../../../store/hooks';
 export function GenreFilter() {
   const dispatch = useDispatch();
   const { data } = useSelector(state => state.movieList);
-  const { filter } = data.fetchOptions;
+  const { filter: filters } = data.fetchOptions;
 
-  const handleFilter = (genreFilter: GenreFilters) => {
-    dispatch(changeFilter([genreFilter]));
-    dispatch(fetchMovieList());
+  const handleSelectFilter = (selectedFilter: GenreFilters) => {
+    let gFilters: GenreFilters[];
+    // check if selected filter is already active
+    if (!checkActive(selectedFilter)) {
+      // selectedFilter is not active
+      // for filter "", aka. All, just set filters to All
+      if (selectedFilter === '') gFilters = [''];
+      // for others,
+      // if filters already includes "", just set filters to the selectedFilter
+      else if (checkActive('')) gFilters = [selectedFilter];
+      // else filters doesn't include "", just add selectedFilter to filters
+      else gFilters = [...filters, selectedFilter];
+
+      dispatch(changeFilter(gFilters));
+      dispatch(fetchMovieList());
+    } else {
+      // selectedFilter is active
+      if (selectedFilter === '') {
+        // for filter "", aka. All, not need to changeFilters, just refetch movie list.
+        dispatch(fetchMovieList());
+        return;
+      } else {
+        // for others,
+        if (filters.length === 1) {
+          // if filters only include 1 filter(just the selected filter)
+          // just active only filter "", then refetch movie list.
+          dispatch(changeFilter(['']));
+          dispatch(fetchMovieList());
+        } else {
+          // otherwise, deactive itself then refetch movie list.
+          gFilters = filters.filter(filter => filter !== selectedFilter);
+
+          dispatch(changeFilter(gFilters));
+          dispatch(fetchMovieList());
+        }
+      }
+    }
+  };
+
+  const checkActive = (genreFilter: GenreFilters) => {
+    return filters.findIndex(filter => filter === genreFilter) !== -1;
   };
 
   return (
@@ -23,9 +61,9 @@ export function GenreFilter() {
       {genreFilters.map((gf, index) => (
         <Genre
           key={index}
-          style={gf === filter[0] ? { borderBottom: '2px solid #f65261' } : {}}
+          style={checkActive(gf) ? { borderBottom: '2px solid #f65261' } : {}}
           onClick={() => {
-            handleFilter(gf);
+            handleSelectFilter(gf);
           }}>
           {gf === '' ? 'All' : gf}
         </Genre>

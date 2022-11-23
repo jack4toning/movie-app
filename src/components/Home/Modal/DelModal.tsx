@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CloseButton } from '../../Common';
 import { useDispatch, useSelector } from '../../../store/hooks';
 import { deleteMovie } from '../../../store/features/movieListSlice';
+import { toggleModal } from '../../../store/features/modalSlice';
 
 export function DelModal() {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ export function DelModal() {
 
   const handleConfirm = () => {
     dispatch(deleteMovie(focusId));
+    dispatch(toggleModal('del'));
   };
 
   return (

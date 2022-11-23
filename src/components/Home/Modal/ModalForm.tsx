@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
@@ -7,7 +7,16 @@ import { formatRuntime } from '../../../utils';
 import { useDispatch, useSelector } from '../../../store/hooks';
 import { addMovie, editMovie } from '../../../store/features/movieListSlice';
 import { toggleModal } from '../../../store/features/modalSlice';
-import { clearForm } from '../../../store/features/formSlice';
+import {
+  changeGenres,
+  changeOverview,
+  changePosterPath,
+  changeReleaseDate,
+  changeRuntime,
+  changeTitle,
+  changeVoteAverage,
+  clearForm,
+} from '../../../store/features/formSlice';
 
 export default function ModalForm({
   formTitle,
@@ -22,93 +31,71 @@ export default function ModalForm({
   const {
     id,
     title,
-    release_date: releaseDate,
-    poster_path: movieUrl,
-    vote_average: rating,
+    release_date,
+    poster_path,
+    vote_average,
     genres,
     runtime,
     overview,
   } = form;
 
-  console.log(form);
+  // console.log(form);
 
-  const keep1DP = (numStr: string) => {
-    // int should always be int. For example, 9.0 should be 9
+  const transformRating = (numStr: string) => {
+    // clear front zeros and non numeric character
+    numStr = numStr.replace(/^0+|[^\d]+/g, '');
+    // allow user empty input
+    if (numStr === '') return numStr;
+    // For rating number, int should always be int. For example, 9.0 should be 9. Besides, 9.193 should be 9.1
     return parseFloat(Number(numStr).toFixed(1));
   };
 
-  const [localForm, setlocalForm] = useState({
-    title,
-    releaseDate,
-    movieUrl,
-    rating: String(rating),
-    genres,
-    runtime: String(runtime),
-    overview,
-  });
-
-  console.log(localForm);
-
-  useEffect(() => {
-    setlocalForm({
-      title,
-      releaseDate,
-      movieUrl,
-      rating: String(rating),
-      genres,
-      runtime: String(runtime),
-      overview,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
-
-  const formRuntime = Number(localForm.runtime);
-  const hmRuntime =
-    formRuntime === -1 || Number.isNaN(formRuntime)
-      ? ''
-      : formatRuntime(formRuntime);
-
-  // avoid NaN or <0 input
-  const excludeWrongNum = (numStr: string) => {
-    const rt = Number(numStr);
-    if (Number.isNaN(rt) || rt <= -1) return '';
-    return numStr;
+  const transformString = (str: string) => {
+    if (str === null) return '';
+    return str;
   };
 
-  const [showHMIndicator, setShowHMIndicator] = useState(true);
+  // transform null to 0 or return num itself
+  const transformNum = (num: number | string) => {
+    if (num === null) return '';
+    return num;
+  };
+
+  const transformToInt = (numStr: string) => {
+    // clear front zeros and non numeric character
+    numStr = numStr.replace(/^0+|[^\d]+/g, '');
+    // allow user empty input
+    if (numStr === '') return numStr;
+    return parseInt(numStr);
+  };
+
+  const [showRuntimeInHM, setShowRuntimeInHM] = useState(true);
 
   const handleMouseEnterHMI = () => {
-    setShowHMIndicator(false);
+    setShowRuntimeInHM(false);
   };
+
   const handleMouseLeaveHMI = () => {
-    setShowHMIndicator(true);
+    setShowRuntimeInHM(true);
   };
 
   const handleReset = () => {
-    setlocalForm(() => ({
-      title: '',
-      releaseDate: '',
-      movieUrl: '',
-      rating: '-1',
-      genres: [],
-      runtime: '-1',
-      overview: '',
-    }));
+    dispatch(clearForm());
   };
 
   const handleSubmit = () => {
     const movieProps = {
-      title: localForm.title,
+      title,
       tagline: 'test',
-      vote_average: keep1DP(localForm.rating),
+      vote_average: vote_average === '' ? 0 : vote_average,
       vote_count: 0,
-      release_date: localForm.releaseDate,
-      poster_path: localForm.movieUrl,
-      overview: localForm.overview,
+      release_date,
+      poster_path,
+      overview,
       budget: 0,
       revenue: 0,
-      genres: localForm.genres,
-      runtime: Number(localForm.runtime),
+      genres,
+      runtime: runtime === '' ? 0 : runtime,
     };
 
     console.log(movieProps);
@@ -128,32 +115,33 @@ export default function ModalForm({
     dispatch(clearForm());
   };
 
-  const handleChangeMovieTitie = (e: any) => {
-    setlocalForm(prev => ({ ...prev, title: e.target.value }));
+  const handleChangeMovieTitie = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeTitle(e.target.value));
   };
 
   const handleChangeReleaseDate = (releaseDate: string) => {
-    setlocalForm(prev => ({ ...prev, releaseDate }));
+    dispatch(changeReleaseDate(releaseDate));
   };
 
-  const handleChangeMovieUrl = (e: any) => {
-    setlocalForm(prev => ({ ...prev, movieUrl: e.target.value }));
+  const handleChangeMovieUrl = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changePosterPath(e.target.value));
   };
 
-  const handleChangeMovieRating = (e: any) => {
-    setlocalForm(prev => ({ ...prev, rating: e.target.value }));
+  const handleChangeMovieRating = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch(changeVoteAverage(transformRating(e.target.value)));
   };
 
   const handleChangeMovieGenres = (genres: string[]) => {
-    setlocalForm(prev => ({ ...prev, genres }));
+    dispatch(changeGenres(genres));
   };
 
-  const handleChangeMovieRuntime = (e: any) => {
-    setlocalForm(prev => ({ ...prev, runtime: e.target.value }));
+  const handleChangeMovieRuntime = (e: ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target.value, 'onchange');
+    dispatch(changeRuntime(transformToInt(e.target.value)));
   };
 
-  const handleChangeMovieOverview = (e: any) => {
-    setlocalForm(prev => ({ ...prev, overview: e.target.value }));
+  const handleChangeMovieOverview = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    dispatch(changeOverview(e.target.value));
   };
 
   return (
@@ -163,58 +151,58 @@ export default function ModalForm({
       <FlexWrapper>
         <OptionWrapper>
           <SmallTitle>title</SmallTitle>
-          <LongInput
+          <MovieTitle
             placeholder='title'
-            value={localForm.title}
+            value={transformString(title)}
             onChange={handleChangeMovieTitie}
           />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>release date</SmallTitle>
-          <DatePicker
-            date={localForm.releaseDate}
-            onChange={handleChangeReleaseDate}
-          />
+          <DatePicker date={release_date} onChange={handleChangeReleaseDate} />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>movie url</SmallTitle>
-          <LongInput
+          <PosterPath
             placeholder='https://'
-            value={localForm.movieUrl}
+            value={transformString(poster_path)}
             onChange={handleChangeMovieUrl}
           />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>rating</SmallTitle>
-          <ShortInput
+          <Rating
+            type='number'
+            min={'0'}
             placeholder='7.8'
-            value={excludeWrongNum(localForm.rating)}
+            value={transformNum(vote_average)}
             onChange={handleChangeMovieRating}
           />
         </OptionWrapper>
         <OptionWrapper>
           <SmallTitle>genre</SmallTitle>
           <GenreToggler
-            selectedGenres={localForm.genres}
+            selectedGenres={genres}
             onChange={handleChangeMovieGenres}
           />
         </OptionWrapper>
         <OptionWrapper style={{ position: 'relative' }}>
           <SmallTitle>runtime</SmallTitle>
-          {!showHMIndicator && (
-            <ShortInput
+          {!showRuntimeInHM && (
+            <Runtime
+              type='number'
+              min={'0'}
               autoFocus
               placeholder='minutes'
-              value={excludeWrongNum(localForm.runtime)}
+              value={transformNum(runtime)}
               onChange={handleChangeMovieRuntime}
               onMouseLeave={handleMouseLeaveHMI}
             />
           )}
-          {showHMIndicator && (
-            <HMIndicator
+          {showRuntimeInHM && (
+            <RuntimeInHM
               placeholder='minutes'
-              value={hmRuntime}
-              // TODO: 将这个组件单独创建一个文件，避免mouse enter事件导致整个表单重渲染
+              value={formatRuntime(runtime)}
               onMouseEnter={handleMouseEnterHMI}
               onChange={() => {}}
             />
@@ -224,7 +212,7 @@ export default function ModalForm({
           <SmallTitle>overview</SmallTitle>
           <Overview
             placeholder='Movie description'
-            value={localForm.overview}
+            value={transformString(overview)}
             onChange={handleChangeMovieOverview}
           />
         </OptionWrapper>
@@ -294,10 +282,15 @@ const ShortInput = styled(LongInput)`
 //   -webkit-text-fill-color: transparent;
 // `;
 
-const HMIndicator = styled(ShortInput)`
-  /* position: absolute;
-  left: 0; */
-`;
+const MovieTitle = styled(LongInput)``;
+
+const PosterPath = styled(LongInput)``;
+
+const Rating = styled(ShortInput)``;
+
+const Runtime = styled(ShortInput)``;
+
+const RuntimeInHM = styled(ShortInput)``;
 
 const Overview = styled.textarea`
   width: 856px;
@@ -317,9 +310,14 @@ const Overview = styled.textarea`
   &::placeholder {
     color: rgba(255, 255, 255, 0.2);
   }
+
   &::-webkit-input-placeholder {
     /*Webkit browsers*/
     font-family: 'Montserrat', sans-serif;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 

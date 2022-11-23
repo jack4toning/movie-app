@@ -14,15 +14,15 @@ export const defaultForm: FormState = {
     id: -1,
     title: '',
     tagline: '',
-    vote_average: -1,
-    vote_count: -1,
+    vote_average: '',
+    vote_count: 0,
     release_date: '',
     poster_path: '',
     overview: '',
-    budget: -1,
-    revenue: -1,
+    budget: 0,
+    revenue: 0,
     genres: [],
-    runtime: -1,
+    runtime: '',
   },
 };
 
@@ -49,11 +49,29 @@ export const formSlice = createSlice({
   name: 'form',
   initialState: defaultForm,
   reducers: {
-    fillForm: (state, action) => {
-      state = action.payload;
-    },
     clearForm: state => {
-      state = defaultForm;
+      state.data = defaultForm.data;
+    },
+    changeTitle: (state, action) => {
+      state.data.title = action.payload;
+    },
+    changeReleaseDate: (state, action) => {
+      state.data.release_date = action.payload;
+    },
+    changePosterPath: (state, action) => {
+      state.data.poster_path = action.payload;
+    },
+    changeVoteAverage: (state, action) => {
+      state.data.vote_average = action.payload;
+    },
+    changeGenres: (state, action) => {
+      state.data.genres = action.payload;
+    },
+    changeRuntime: (state, action) => {
+      state.data.runtime = action.payload;
+    },
+    changeOverview: (state, action) => {
+      state.data.overview = action.payload;
     },
   },
   extraReducers: {
@@ -71,5 +89,14 @@ export const formSlice = createSlice({
   },
 });
 
-export const { fillForm, clearForm } = formSlice.actions;
+export const {
+  clearForm,
+  changeTitle,
+  changeReleaseDate,
+  changePosterPath,
+  changeGenres,
+  changeVoteAverage,
+  changeOverview,
+  changeRuntime,
+} = formSlice.actions;
 export default formSlice.reducer;
