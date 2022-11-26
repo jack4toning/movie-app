@@ -26,7 +26,7 @@ export const defaultForm: FormState = {
   },
 };
 
-export const fetchMovie = createAsyncThunk<
+export const fetchMovieForForm = createAsyncThunk<
   Movie,
   number,
   {
@@ -35,7 +35,7 @@ export const fetchMovie = createAsyncThunk<
     };
     rejectValue: Error;
   }
->('form/fetchMovie', async (id, thunkApi) => {
+>('form/fetchMovieForForm', async (id, thunkApi) => {
   const response = await fetch(`http://localhost:4000/movies/${id}`);
 
   if (response.status === 404) {
@@ -75,14 +75,14 @@ export const formSlice = createSlice({
     },
   },
   extraReducers: {
-    [fetchMovie.pending.type]: state => {
+    [fetchMovieForForm.pending.type]: state => {
       state.loading = true;
     },
-    [fetchMovie.fulfilled.type]: (state, { payload }) => {
+    [fetchMovieForForm.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
       state.data = payload;
     },
-    [fetchMovie.rejected.type]: (state, { payload }) => {
+    [fetchMovieForForm.rejected.type]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
     },

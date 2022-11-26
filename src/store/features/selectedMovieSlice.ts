@@ -20,7 +20,7 @@ export const defaultState: MovieState = {
   data: defaultMovieData,
 };
 
-export const fetchMovie = createAsyncThunk<
+export const fetchMovieForSelect = createAsyncThunk<
   Movie,
   number,
   {
@@ -29,7 +29,7 @@ export const fetchMovie = createAsyncThunk<
     };
     rejectValue: Error;
   }
->('movie/fetchMovie', async (id, thunkApi) => {
+>('movie/fetchMovieForSelect', async (id, thunkApi) => {
   const response = await fetch(`http://localhost:4000/movies/${id}`);
 
   if (response.status === 404) {
@@ -51,14 +51,14 @@ export const selectedMovieSlice = createSlice({
     },
   },
   extraReducers: {
-    [fetchMovie.pending.type]: state => {
+    [fetchMovieForSelect.pending.type]: state => {
       state.loading = true;
     },
-    [fetchMovie.fulfilled.type]: (state, { payload }) => {
+    [fetchMovieForSelect.fulfilled.type]: (state, { payload }) => {
       state.loading = false;
-      state.data = payload;
+      state.data.movie = payload;
     },
-    [fetchMovie.rejected.type]: (state, { payload }) => {
+    [fetchMovieForSelect.rejected.type]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
     },

@@ -11,6 +11,7 @@ import {
 import styled from 'styled-components';
 import SelectedMovie from '../../components/Home/SelectedMovie';
 import { useSelector } from '../../store/hooks';
+import BasicForm from '../../components/Home/Modal/BasicForm';
 
 export function Home() {
   const { addToggle, editToggle, delToggle, infoToggle } = useSelector(
@@ -39,6 +40,8 @@ export function Home() {
     selectedMovie && window.scrollTo({ top: 0, left: 0 });
   }, [selectedMovie]);
 
+  console.log(data, selectedMovie);
+
   return (
     <Container>
       {selectedMovie ? <SelectedMovie movie={selectedMovie} /> : <Header />}
@@ -48,6 +51,7 @@ export function Home() {
       {editToggle && <EditModal />}
       {delToggle && <DelModal />}
       {infoToggle && <InfoModal />}
+      <BasicForm />
     </Container>
   );
 }

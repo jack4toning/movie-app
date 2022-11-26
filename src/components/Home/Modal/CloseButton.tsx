@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import closeButton from '../../assets/images/closeButton.svg';
-import { clearForm } from '../../store/features/formSlice';
-import { toggleModal } from '../../store/features/modalSlice';
-import { useDispatch } from '../../store/hooks';
+import closeButton from '../../../assets/images/closeButton.svg';
+import { clearForm } from '../../../store/features/formSlice';
+import { toggleModal } from '../../../store/features/modalSlice';
+import { useDispatch } from '../../../store/hooks';
 
 export const CloseButton = ({
   position,

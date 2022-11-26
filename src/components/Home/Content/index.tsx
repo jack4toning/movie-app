@@ -27,7 +27,8 @@ export function Content(props: { modalToggle: boolean }) {
       </FilterSorterWrapper>
       <MovieListWrapper>
         <MoviesCount>
-          <CountNumber>{movieList.length}</CountNumber> movies found
+          <CountNumber>{movieList.length}</CountNumber>{' '}
+          {movieList.length === 1 ? 'movie' : 'movies'} found
         </MoviesCount>
         <MovieList movieList={movieList} />
       </MovieListWrapper>

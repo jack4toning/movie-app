@@ -2,7 +2,6 @@ import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
-import { CloseButton } from '../../Common';
 import { formatRuntime } from '../../../utils';
 import { useDispatch, useSelector } from '../../../store/hooks';
 import { addMovie, editMovie } from '../../../store/features/movieListSlice';
@@ -17,6 +16,7 @@ import {
   changeVoteAverage,
   clearForm,
 } from '../../../store/features/formSlice';
+import { CloseButton } from './CloseButton';
 
 export default function ModalForm({
   formTitle,

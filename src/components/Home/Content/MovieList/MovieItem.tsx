@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import threeDots from '../../../../assets/images/threeDots.svg';
 import miniCloseButton from '../../../../assets/images/miniCloseButton.svg';
 import { getGenreStr } from '../../../../utils';
-import { fetchMovie } from '../../../../store/features/formSlice';
+import { fetchMovieForSelect } from '../../../../store/features/selectedMovieSlice';
+import { fetchMovieForForm } from '../../../../store/features/formSlice';
 import { useDispatch } from '../../../../store/hooks';
 import { toggleModal } from '../../../../store/features/modalSlice';
 import { Movie } from '../../../../store/features/movieListSlice';
@@ -35,7 +36,7 @@ export function MovieItem({ movie }: { movie: Movie }) {
   };
 
   const handleClickPoster = () => {
-    dispatch(fetchMovie(id));
+    dispatch(fetchMovieForSelect(id));
   };
 
   const handleMenuIconClick = () => {
@@ -50,7 +51,7 @@ export function MovieItem({ movie }: { movie: Movie }) {
   const handleEdit = () => {
     setShowMenuContent(false);
     dispatch(toggleModal('edit'));
-    dispatch(fetchMovie(id));
+    dispatch(fetchMovieForForm(id));
   };
 
   const handleDelete = () => {
@@ -67,7 +68,7 @@ export function MovieItem({ movie }: { movie: Movie }) {
       />
       {showMenuIconContent && (
         <ContextMenuContent>
-          <MiniCloseButton onClick={handleCloseButtonClick} />
+          <CloseButton onClick={handleCloseButtonClick} />
           <EditButton onClick={handleEdit}>Edit</EditButton>
           <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
         </ContextMenuContent>
@@ -130,7 +131,7 @@ const ContextMenuContent = styled.div`
   border-radius: 4px;
 `;
 
-const MiniCloseButton = styled.div`
+const CloseButton = styled.div`
   width: 11px;
   height: 12px;
   background-image: url(${miniCloseButton});

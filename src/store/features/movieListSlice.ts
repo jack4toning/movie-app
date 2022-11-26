@@ -57,6 +57,7 @@ export const defaultMovieListData: MovieListData = {
   fetchOptions: {
     sortBy: sortTypes[0],
     sortOrder: orderTypes[0],
+    searchBy: searchTypes[0],
     filter: [''],
     offset: 0,
     limit: 9,
@@ -209,6 +210,9 @@ export const movieListSlice = createSlice({
     changeFilter: (state, { payload }: { payload: GenreFilters[] }) => {
       state.data.fetchOptions.filter = payload;
     },
+    changeSearchString: (state, { payload }: { payload: string }) => {
+      state.data.fetchOptions.search = payload;
+    },
   },
   extraReducers: {
     [fetchMovieList.pending.type]: state => {
@@ -248,6 +252,10 @@ export const movieListSlice = createSlice({
   },
 });
 
-export const { changeSortBy, changeSortOrder, changeFilter } =
-  movieListSlice.actions;
+export const {
+  changeSearchString,
+  changeSortBy,
+  changeSortOrder,
+  changeFilter,
+} = movieListSlice.actions;
 export default movieListSlice.reducer;

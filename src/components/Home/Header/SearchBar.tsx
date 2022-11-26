@@ -1,12 +1,59 @@
-import React from 'react';
+import React, {
+  ChangeEvent,
+  KeyboardEventHandler,
+  useEffect,
+  useState,
+} from 'react';
 import styled from 'styled-components';
+import {
+  changeSearchString,
+  fetchMovieList,
+} from '../../../store/features/movieListSlice';
+import { useDispatch } from '../../../store/hooks';
+import miniCloseButton from '../../../assets/images/closeButton.svg';
 
 export default function SearchBar() {
+  const dispatch = useDispatch();
+  const [value, setValue] = useState('');
+
+  const handleSearch = () => {
+    dispatch(changeSearchString(value));
+    dispatch(fetchMovieList());
+  };
+
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleClear = () => {
+    setValue('');
+    dispatch(changeSearchString(''));
+  };
+
+  const handleEnter: KeyboardEventHandler<HTMLInputElement> = e => {
+    if (e.key === 'Enter' && value !== '') handleSearch();
+  };
+
+  useEffect(() => {
+    return () => {
+      dispatch(changeSearchString(''));
+    };
+  }, [dispatch]);
+
   return (
     <Container>
       <Title>FIND YOUR MOVIE</Title>
-      <Input placeholder='What do you want to watch?' autoFocus />
-      <Button>SEARCH</Button>
+      <InputWrapper>
+        <Input
+          value={value}
+          onChange={handleInput}
+          onKeyUp={handleEnter}
+          placeholder='What do you want to watch?'
+          autoFocus
+        />
+        {value && <CloseButton onClick={handleClear} />}
+      </InputWrapper>
+      <Button onClick={handleSearch}>SEARCH</Button>
     </Container>
   );
 }
@@ -23,6 +70,23 @@ const Title = styled.p`
   margin: 0 0 38px 0;
 `;
 
+const InputWrapper = styled.div`
+  display: inline-block;
+  position: relative;
+`;
+
+const CloseButton = styled.div`
+  width: 21px;
+  height: 21px;
+  background-image: url(${miniCloseButton});
+  background-size: cover;
+  position: absolute;
+  right: 15px;
+  top: 18px;
+  cursor: pointer;
+  opacity: 0.7;
+`;
+
 const Input = styled.input`
   width: 713px;
   height: 57px;
@@ -34,6 +98,7 @@ const Input = styled.input`
   text-indent: 1rem;
   caret-color: #d4d4d4;
   font-size: 20px;
+  color: #fff;
 
   &::-webkit-input-placeholder {
     /*Webkit browsers*/

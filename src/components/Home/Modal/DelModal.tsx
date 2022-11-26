@@ -1,7 +1,7 @@
 import React from 'react';
 import ModalContainer from './ModalContainer';
 import styled from 'styled-components';
-import { CloseButton } from '../../Common';
+import { CloseButton } from './CloseButton';
 import { useDispatch, useSelector } from '../../../store/hooks';
 import { deleteMovie } from '../../../store/features/movieListSlice';
 import { toggleModal } from '../../../store/features/modalSlice';

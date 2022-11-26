@@ -2,7 +2,7 @@ import React from 'react';
 import ModalContainer from './ModalContainer';
 import styled from 'styled-components';
 import crossIcon from '../../../assets/images/crossIcon.svg';
-import { CloseButton } from '../../Common';
+import { CloseButton } from './CloseButton';
 
 export function InfoModal() {
   return (

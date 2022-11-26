@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>菜鸟教程(runoob.com)</title>
+  </head>
+  <body>
+    <p id="demo"></p>
+    <script>
+      var replacer = function (key, value) {
+        if (typeof value === 'string') return undefined;
+        return value;
+      };
+      var str = { name: '菜鸟教程', site: 'http://www.runoob.com', age: 50 };
+      str_pretty1 = JSON.stringify(str);
+      document.write('只有一个参数情况：');
+      document.write('<br>');
+      document.write('<pre>' + str_pretty1 + '</pre>');
+      document.write('<br>');
+      str_pretty2 = JSON.stringify(str, replacer, 4); //使用四个空格缩进
+      document.write('使用参数情况：');
+      document.write('<br>');
+      document.write('<pre>' + str_pretty2 + '</pre>'); // pre 用于格式化输出
+    </script>
+  </body>
+</html>

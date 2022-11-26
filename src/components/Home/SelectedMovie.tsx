@@ -9,7 +9,7 @@ import { formatRuntime, getGenreStr } from '../../utils';
 export default function SelectedMovie({ movie }: { movie: Movie }) {
   const {
     title,
-    vote_average: rating,
+    vote_average,
     release_date: releaseDate,
     poster_path: movieUrl,
     overview,
@@ -20,6 +20,7 @@ export default function SelectedMovie({ movie }: { movie: Movie }) {
   const dispatch = useDispatch();
 
   const releaseYear = releaseDate.split('-')[0];
+  const rating = String(vote_average).substring(0, 4);
 
   const handleMagnifierClick = () => {
     dispatch(clearSelectedMovie());
@@ -81,6 +82,7 @@ const FlexWrapper = styled.div`
 `;
 
 const Poster = styled.img`
+  display: block;
   width: 322px;
   height: 486px;
   margin-bottom: 29px;
@@ -92,6 +94,7 @@ const MovieInfo = styled.div`
 `;
 
 const Title = styled.div`
+  flex-shrink: 1;
   font-weight: 300;
   font-size: 40px;
   height: 49px;
@@ -100,9 +103,13 @@ const Title = styled.div`
   text-transform: uppercase;
   margin-right: 25px;
   margin-bottom: 9px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 const Rating = styled.div`
+  flex-shrink: 0;
   position: relative;
   top: -7px;
   width: 60px;
