@@ -7,16 +7,21 @@ import { useDispatch, useSelector } from '../../../store/hooks';
 import { addMovie, editMovie } from '../../../store/features/movieListSlice';
 import { toggleModal } from '../../../store/features/modalSlice';
 import {
-  changeGenres,
-  changeOverview,
-  changePosterPath,
-  changeReleaseDate,
-  changeRuntime,
-  changeTitle,
-  changeVoteAverage,
   clearForm,
+  changeReleaseDate,
+  changeGenres,
 } from '../../../store/features/formSlice';
 import { CloseButton } from './CloseButton';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+type FormikValues = {
+  title: string;
+  poster_path: string;
+  vote_average: number;
+  runtime: number;
+  overview: string;
+};
 
 export default function ModalForm({
   formTitle,
@@ -39,35 +44,11 @@ export default function ModalForm({
     overview,
   } = form;
 
-  // console.log(form);
+  console.log(form);
 
-  const transformRating = (numStr: string) => {
-    // clear front zeros and non numeric character
-    numStr = numStr.replace(/^0+|[^\d]+/g, '');
-    // allow user empty input
-    if (numStr === '') return numStr;
-    // For rating number, int should always be int. For example, 9.0 should be 9. Besides, 9.193 should be 9.1
-    return parseFloat(Number(numStr).toFixed(1));
-  };
+  const [releaseDateError, setReleaseDateError] = useState('');
 
-  const transformString = (str: string) => {
-    if (str === null) return '';
-    return str;
-  };
-
-  // transform null to 0 or return num itself
-  const transformNum = (num: number | string) => {
-    if (num === null) return '';
-    return num;
-  };
-
-  const transformToInt = (numStr: string) => {
-    // clear front zeros and non numeric character
-    numStr = numStr.replace(/^0+|[^\d]+/g, '');
-    // allow user empty input
-    if (numStr === '') return numStr;
-    return parseInt(numStr);
-  };
+  const [genreTogglerError, setGenreTogglerError] = useState('');
 
   const [showRuntimeInHM, setShowRuntimeInHM] = useState(true);
 
@@ -79,23 +60,19 @@ export default function ModalForm({
     setShowRuntimeInHM(true);
   };
 
-  const handleReset = () => {
+  const handleGlobalFormReset = () => {
     dispatch(clearForm());
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (values: FormikValues) => {
     const movieProps = {
-      title,
+      ...values,
       tagline: 'test',
-      vote_average: vote_average === '' ? 0 : vote_average,
       vote_count: 0,
       release_date,
-      poster_path,
-      overview,
       budget: 0,
       revenue: 0,
       genres,
-      runtime: runtime === '' ? 0 : runtime,
     };
 
     console.log(movieProps);
@@ -115,110 +92,197 @@ export default function ModalForm({
     dispatch(clearForm());
   };
 
-  const handleChangeMovieTitie = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeTitle(e.target.value));
-  };
-
   const handleChangeReleaseDate = (releaseDate: string) => {
     dispatch(changeReleaseDate(releaseDate));
-  };
-
-  const handleChangeMovieUrl = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changePosterPath(e.target.value));
-  };
-
-  const handleChangeMovieRating = (e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeVoteAverage(transformRating(e.target.value)));
   };
 
   const handleChangeMovieGenres = (genres: string[]) => {
     dispatch(changeGenres(genres));
   };
 
-  const handleChangeMovieRuntime = (e: ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target.value, 'onchange');
-    dispatch(changeRuntime(transformToInt(e.target.value)));
-  };
-
-  const handleChangeMovieOverview = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch(changeOverview(e.target.value));
-  };
+  const validationSchema = Yup.object({
+    title: Yup.string()
+      .max(15, 'Must be 15 characters or less')
+      .required('Required'),
+    poster_path: Yup.string().url('Invalid url').required('Required'),
+    vote_average: Yup.number()
+      .min(0, 'Min value is 0')
+      .max(10, 'Max value is 10')
+      .required('Required'),
+    runtime: Yup.number()
+      .min(0, 'Min value is 0')
+      .max(1440, 'Max value is 1440')
+      .required('Required'),
+    overview: Yup.string()
+      .max(1000, 'Must be 1000 characters or less')
+      .required('Required'),
+  });
 
   return (
     <Container>
       <CloseButton position={30} modalType={type} />
       <Title>{formTitle}</Title>
-      <FlexWrapper>
-        <OptionWrapper>
-          <SmallTitle>title</SmallTitle>
-          <MovieTitle
-            placeholder='title'
-            value={transformString(title)}
-            onChange={handleChangeMovieTitie}
-          />
-        </OptionWrapper>
-        <OptionWrapper>
-          <SmallTitle>release date</SmallTitle>
-          <DatePicker date={release_date} onChange={handleChangeReleaseDate} />
-        </OptionWrapper>
-        <OptionWrapper>
-          <SmallTitle>movie url</SmallTitle>
-          <PosterPath
-            placeholder='https://'
-            value={transformString(poster_path)}
-            onChange={handleChangeMovieUrl}
-          />
-        </OptionWrapper>
-        <OptionWrapper>
-          <SmallTitle>rating</SmallTitle>
-          <Rating
-            type='number'
-            min={'0'}
-            placeholder='7.8'
-            value={transformNum(vote_average)}
-            onChange={handleChangeMovieRating}
-          />
-        </OptionWrapper>
-        <OptionWrapper>
-          <SmallTitle>genre</SmallTitle>
-          <GenreToggler
-            selectedGenres={genres}
-            onChange={handleChangeMovieGenres}
-          />
-        </OptionWrapper>
-        <OptionWrapper style={{ position: 'relative' }}>
-          <SmallTitle>runtime</SmallTitle>
-          {!showRuntimeInHM && (
-            <Runtime
-              type='number'
-              min={'0'}
-              autoFocus
-              placeholder='minutes'
-              value={transformNum(runtime)}
-              onChange={handleChangeMovieRuntime}
-              onMouseLeave={handleMouseLeaveHMI}
-            />
-          )}
-          {showRuntimeInHM && (
-            <RuntimeInHM
-              placeholder='minutes'
-              value={formatRuntime(runtime)}
-              onMouseEnter={handleMouseEnterHMI}
-              onChange={() => {}}
-            />
-          )}
-        </OptionWrapper>
-        <OptionWrapper>
-          <SmallTitle>overview</SmallTitle>
-          <Overview
-            placeholder='Movie description'
-            value={transformString(overview)}
-            onChange={handleChangeMovieOverview}
-          />
-        </OptionWrapper>
-      </FlexWrapper>
-      <ResetButton onClick={handleReset}>Reset</ResetButton>
-      <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
+      <Formik
+        enableReinitialize
+        initialValues={{
+          title,
+          poster_path,
+          vote_average: vote_average ? vote_average : '',
+          runtime: runtime ? runtime : '',
+          overview,
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          // @ts-ignore
+          // this value would have been validated before it is sent out
+          handleSubmit(values);
+        }}>
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          handleReset,
+          isValid,
+          /* and other goodies */
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <FlexWrapper>
+              <OptionWrapper>
+                <SmallTitle>title</SmallTitle>
+                <MovieTitle
+                  name='title'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.title}
+                  placeholder='title'
+                />
+                <ValidationMsg>
+                  {errors.title && touched.title && errors.title}
+                </ValidationMsg>
+              </OptionWrapper>
+              <OptionWrapper>
+                <SmallTitle>release date</SmallTitle>
+                <DatePicker
+                  date={release_date}
+                  onChange={handleChangeReleaseDate}
+                  handleError={setReleaseDateError}
+                />
+                {releaseDateError && (
+                  <ValidationMsg>{releaseDateError}</ValidationMsg>
+                )}
+              </OptionWrapper>
+              <OptionWrapper>
+                <SmallTitle>movie url</SmallTitle>
+                <PosterPath
+                  name='poster_path'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.poster_path}
+                  placeholder='https://'
+                />
+                <ValidationMsg>
+                  {errors.poster_path &&
+                    touched.poster_path &&
+                    errors.poster_path}
+                </ValidationMsg>
+              </OptionWrapper>
+              <OptionWrapper>
+                <SmallTitle>rating</SmallTitle>
+                <Rating
+                  type='number'
+                  name='vote_average'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.vote_average}
+                  placeholder='7.8'
+                />
+                <ValidationMsg>
+                  {errors.vote_average &&
+                    touched.vote_average &&
+                    errors.vote_average}
+                </ValidationMsg>
+              </OptionWrapper>
+              <OptionWrapper>
+                <SmallTitle>genre</SmallTitle>
+                <GenreToggler
+                  selectedGenres={genres}
+                  onChange={handleChangeMovieGenres}
+                  handleError={setGenreTogglerError}
+                />
+                {genreTogglerError && (
+                  <ValidationMsg>{genreTogglerError}</ValidationMsg>
+                )}
+              </OptionWrapper>
+              <OptionWrapper style={{ position: 'relative' }}>
+                <SmallTitle>runtime</SmallTitle>
+                {!showRuntimeInHM && (
+                  <Runtime
+                    type='number'
+                    name='runtime'
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.runtime}
+                    placeholder='minutes'
+                    autoFocus
+                    onMouseLeave={handleMouseLeaveHMI}
+                  />
+                )}
+                {showRuntimeInHM && (
+                  <>
+                    <Runtime
+                      style={{ position: 'absolute', opacity: 0 }}
+                      type='number'
+                      name='runtime'
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.runtime}
+                      placeholder='minutes'
+                      autoFocus
+                      onMouseLeave={handleMouseLeaveHMI}
+                    />
+                    <RuntimeInHM
+                      placeholder='minutes'
+                      value={formatRuntime(values.runtime)}
+                      onMouseEnter={handleMouseEnterHMI}
+                      onChange={() => {}}
+                    />
+                  </>
+                )}
+                <ValidationMsg>
+                  {errors.runtime && touched.runtime && errors.runtime}
+                </ValidationMsg>
+              </OptionWrapper>
+              <OptionWrapper>
+                <SmallTitle>overview</SmallTitle>
+                <Overview
+                  name='overview'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.overview}
+                  placeholder='Movie description'
+                />
+                <ValidationMsg top={234}>
+                  {errors.overview && touched.overview && errors.overview}
+                </ValidationMsg>
+              </OptionWrapper>
+            </FlexWrapper>
+            <ResetButton
+              type='reset'
+              onClick={() => {
+                handleReset();
+                handleGlobalFormReset();
+              }}>
+              Reset
+            </ResetButton>
+            <SubmitButton type='submit' disabled={!isValid}>
+              Submit
+            </SubmitButton>
+          </form>
+        )}
+      </Formik>
     </Container>
   );
 }
@@ -327,6 +391,7 @@ const FlexWrapper = styled.div`
 `;
 
 const OptionWrapper = styled.div`
+  position: relative;
   margin-bottom: 30px;
 
   &:nth-child(odd) {
@@ -334,7 +399,18 @@ const OptionWrapper = styled.div`
   }
 `;
 
-const Button = styled.div`
+const ValidationMsg = styled.div`
+  position: absolute;
+  top: 95px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.8;
+  color: #e53e3e;
+
+  top: ${({ top }: { top?: number }) => top + 'px'};
+`;
+
+const Button = styled.button`
   position: absolute;
   bottom: 60px;
   width: 180px;
@@ -346,16 +422,25 @@ const Button = styled.div`
   text-transform: uppercase;
   border-radius: 4px;
   cursor: pointer;
+  border: none;
+  outline: none;
 `;
 
 const ResetButton = styled(Button)`
   right: 253px;
   color: #f65261;
   border: 1.5px solid #f65261;
+  background: none;
 `;
 
 const SubmitButton = styled(Button)`
   right: 60px;
   color: #fff;
   background: #f65261;
+
+  :disabled {
+    background: rgba(50, 50, 50, 0.948044);
+    opacity: 0.8;
+    color: #949494;
+  }
 `;

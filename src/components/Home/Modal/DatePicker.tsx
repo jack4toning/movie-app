@@ -15,9 +15,11 @@ import calendarIcon from '../../../assets/images/calendarIcon.svg';
 export default function DatePicker({
   date,
   onChange,
+  handleError,
 }: {
   date: string;
   onChange: (releaseDate: string) => void;
+  handleError: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [value, setValue] = useState<Dayjs | null>(dayjs(date));
   const [open, setOpen] = useState(false);
@@ -45,6 +47,9 @@ export default function DatePicker({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <MuiDatePicker
         value={value}
+        onClose={() => {
+          if (date === '') handleError('Required');
+        }}
         onChange={newValue => {
           setValue(newValue);
           onChange(dayjs(newValue).format('YYYY-MM-DD'));
@@ -93,9 +98,13 @@ const Input = styled.input`
   border-radius: 4px;
   font-size: 20px;
   text-indent: 18px;
-  color: rgba(255, 255, 255, 0.2);
+  color: #fff;
   border: none;
   outline: none;
+
+  ::placeholder {
+    font-weight: 500;
+  }
 `;
 
 const CalendarIcon = styled.div`

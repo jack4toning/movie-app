@@ -2,13 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 export class GenreToggler extends React.PureComponent<
-  { selectedGenres: string[]; onChange: (genres: string[]) => void },
+  {
+    selectedGenres: string[];
+    onChange: (genres: string[]) => void;
+    handleError: React.Dispatch<React.SetStateAction<string>>;
+  },
   { genres: string[]; toggle: boolean }
 > {
   constructor(props: {
     selectedGenres: string[];
-    genres: string[];
-    onChange: () => void;
+    onChange: (genres: string[]) => void;
+    handleError: React.Dispatch<React.SetStateAction<string>>;
   }) {
     super(props);
     this.state = {
@@ -38,14 +42,19 @@ export class GenreToggler extends React.PureComponent<
   }
 
   handleSelectClick(e: any) {
-    if (e.currentTarget === e.target)
+    if (e.currentTarget === e.target) {
       this.setState({ toggle: !this.state.toggle });
+      if (this.state.toggle === true) {
+        if (this.props.selectedGenres.length === 0)
+          this.props.handleError('Required');
+        else this.props.handleError('');
+      }
+    }
   }
 
-  handleOptionSelect(e: any, genre: string) {
+  handleOptionSelect(genre: string, isCheck: boolean) {
     let selectedGenres;
-    if (e.target.checked)
-      selectedGenres = [...this.props.selectedGenres, genre];
+    if (!isCheck) selectedGenres = [...this.props.selectedGenres, genre];
     else
       selectedGenres = this.props.selectedGenres.filter(
         sGenre => sGenre !== genre
@@ -57,6 +66,7 @@ export class GenreToggler extends React.PureComponent<
   render() {
     return (
       <CustomSelect
+        selectedNum={this.props.selectedGenres.length}
         onClick={e => {
           this.handleSelectClick(e);
         }}>
@@ -82,8 +92,8 @@ export class GenreToggler extends React.PureComponent<
                     isCheck={isCheck}
                     id={String(index)}
                     type={'checkbox'}
-                    onChange={e => {
-                      this.handleOptionSelect(e, genre);
+                    onChange={() => {
+                      this.handleOptionSelect(genre, isCheck);
                     }}
                   />
                   <Genre htmlFor={String(index)}>{genre}</Genre>
@@ -110,6 +120,10 @@ const CustomSelect = styled.div`
   line-height: 57px;
   cursor: pointer;
   user-select: none;
+
+  color: ${({ selectedNum }: { selectedNum: number }) => {
+    if (selectedNum === 0) return 'rgba(255, 255, 255, 0.2)';
+  }};
 `;
 
 const Triangle = styled.div`
@@ -137,6 +151,7 @@ const OptionWrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  color: rgba(255, 255, 255, 0.8);
 `;
 
 const Option = styled.div`

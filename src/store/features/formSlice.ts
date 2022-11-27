@@ -14,7 +14,7 @@ export const defaultForm: FormState = {
     id: -1,
     title: '',
     tagline: '',
-    vote_average: '',
+    vote_average: 0,
     vote_count: 0,
     release_date: '',
     poster_path: '',
@@ -22,7 +22,7 @@ export const defaultForm: FormState = {
     budget: 0,
     revenue: 0,
     genres: [],
-    runtime: '',
+    runtime: 0,
   },
 };
 
@@ -89,14 +89,5 @@ export const formSlice = createSlice({
   },
 });
 
-export const {
-  clearForm,
-  changeTitle,
-  changeReleaseDate,
-  changePosterPath,
-  changeGenres,
-  changeVoteAverage,
-  changeOverview,
-  changeRuntime,
-} = formSlice.actions;
+export const { clearForm, changeReleaseDate, changeGenres } = formSlice.actions;
 export default formSlice.reducer;
