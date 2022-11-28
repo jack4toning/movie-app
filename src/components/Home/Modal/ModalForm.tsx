@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { GenreToggler } from './GenreToggler';
 import DatePicker from './DatePicker';
@@ -277,7 +277,13 @@ export default function ModalForm({
               }}>
               Reset
             </ResetButton>
-            <SubmitButton type='submit' disabled={!isValid}>
+            <SubmitButton
+              type='submit'
+              disabled={
+                !isValid ||
+                Boolean(releaseDateError) ||
+                Boolean(genreTogglerError)
+              }>
               Submit
             </SubmitButton>
           </form>

@@ -11,7 +11,6 @@ import {
 import styled from 'styled-components';
 import SelectedMovie from '../../components/Home/SelectedMovie';
 import { useSelector } from '../../store/hooks';
-import BasicForm from '../../components/Home/Modal/BasicForm';
 
 export function Home() {
   const { addToggle, editToggle, delToggle, infoToggle } = useSelector(
@@ -51,7 +50,6 @@ export function Home() {
       {editToggle && <EditModal />}
       {delToggle && <DelModal />}
       {infoToggle && <InfoModal />}
-      <BasicForm />
     </Container>
   );
 }

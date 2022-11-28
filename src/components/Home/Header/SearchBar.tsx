@@ -31,7 +31,7 @@ export default function SearchBar() {
   };
 
   const handleEnter: KeyboardEventHandler<HTMLInputElement> = e => {
-    if (e.key === 'Enter' && value !== '') handleSearch();
+    if (e.key === 'Enter') handleSearch();
   };
 
   useEffect(() => {
