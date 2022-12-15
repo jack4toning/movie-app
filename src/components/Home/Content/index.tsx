@@ -6,17 +6,21 @@ import { Sorter } from './Sorter';
 import { MovieList } from './MovieList';
 import { useSelector, useDispatch } from '../../../store/hooks';
 import { fetchMovieList } from '../../../store/features/movieListSlice';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 export function Content(props: { modalToggle: boolean }) {
   const { modalToggle } = props;
 
+  const { searchQuery } = useParams();
+  const [searchParams] = useSearchParams();
+  const genreParam = searchParams.get('genre');
   const dispatch = useDispatch();
   const { data } = useSelector(state => state.movieList);
   const movieList = data.data;
 
   useEffect(() => {
-    dispatch(fetchMovieList());
-  }, [dispatch]);
+    dispatch(fetchMovieList({ search: searchQuery, filter: genreParam }));
+  }, [dispatch, searchQuery, genreParam]);
 
   return (
     <Container modalToggle={modalToggle}>

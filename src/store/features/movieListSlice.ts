@@ -36,9 +36,7 @@ export type OrderTypes = typeof orderTypes[number];
 type FetchOptions = {
   sortBy: SortTypes;
   sortOrder: OrderTypes;
-  search?: string;
   searchBy?: SearchTypes;
-  filter: GenreFilters[];
   offset: number;
   limit: number;
 };
@@ -58,7 +56,6 @@ export const defaultMovieListData: MovieListData = {
     sortBy: sortTypes[0],
     sortOrder: orderTypes[0],
     searchBy: searchTypes[0],
-    filter: [''],
     offset: 0,
     limit: 9,
   },
@@ -87,30 +84,34 @@ type ServerMovieListData = {
   limit: number;
 };
 
-export const fetchMovieList = createAsyncThunk<ServerMovieListData, undefined>(
-  'movieList/fetchMovieList',
-  async (_, thunkApi) => {
-    const state = thunkApi.getState() as RootState;
+export const fetchMovieList = createAsyncThunk<
+  ServerMovieListData,
+  { search: string | undefined; filter: string | null } | undefined
+>('movieList/fetchMovieList', async (fOptions, thunkApi) => {
+  const state = thunkApi.getState() as RootState;
 
-    const fetchOptions = state.movieList.data.fetchOptions;
+  const fetchOptions = state.movieList.data.fetchOptions;
 
-    let queryString = '';
-    if (fetchOptions) {
-      Object.entries(fetchOptions).forEach(([key, val]) => {
-        if (key === 'filter')
-          queryString += `${key}=${(val as string[]).join(',')}&`;
-        else queryString += `${key}=${val}&`;
-      });
-      queryString.substring(queryString.length - 1);
-    }
-
-    console.log(queryString);
-
-    const response = await fetch(`http://localhost:4000/movies?${queryString}`);
-
-    return await response.json();
+  let queryString = '';
+  if (fetchOptions) {
+    Object.entries(fetchOptions).forEach(([key, val]) => {
+      queryString += `${key}=${val}&`;
+    });
+    queryString.substring(queryString.length - 1);
   }
-);
+
+  if (fOptions) {
+    const { search, filter } = fOptions;
+    if (search) queryString = `${queryString}search=${search}&`;
+    if (filter) queryString = `${queryString}filter=${filter}&`;
+  }
+
+  console.log(123, queryString);
+
+  const response = await fetch(`http://localhost:4000/movies?${queryString}`);
+
+  return await response.json();
+});
 
 export const addMovie = createAsyncThunk<
   void,
@@ -207,12 +208,6 @@ export const movieListSlice = createSlice({
     changeSortOrder: (state, { payload }: { payload: OrderTypes }) => {
       state.data.fetchOptions.sortOrder = payload;
     },
-    changeFilter: (state, { payload }: { payload: GenreFilters[] }) => {
-      state.data.fetchOptions.filter = payload;
-    },
-    changeSearchString: (state, { payload }: { payload: string }) => {
-      state.data.fetchOptions.search = payload;
-    },
   },
   extraReducers: {
     [fetchMovieList.pending.type]: state => {
@@ -252,10 +247,5 @@ export const movieListSlice = createSlice({
   },
 });
 
-export const {
-  changeSearchString,
-  changeSortBy,
-  changeSortOrder,
-  changeFilter,
-} = movieListSlice.actions;
+export const { changeSortBy, changeSortOrder } = movieListSlice.actions;
 export default movieListSlice.reducer;

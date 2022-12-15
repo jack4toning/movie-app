@@ -5,20 +5,16 @@ import React, {
   useState,
 } from 'react';
 import styled from 'styled-components';
-import {
-  changeSearchString,
-  fetchMovieList,
-} from '../../../store/features/movieListSlice';
-import { useDispatch } from '../../../store/hooks';
 import miniCloseButton from '../../../assets/images/closeButton.svg';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function SearchBar() {
-  const dispatch = useDispatch();
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
+  const navigate = useNavigate();
+  const { searchQuery } = useParams();
 
   const handleSearch = () => {
-    dispatch(changeSearchString(value));
-    dispatch(fetchMovieList());
+    navigate(`/search/${value}`);
   };
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +23,6 @@ export default function SearchBar() {
 
   const handleClear = () => {
     setValue('');
-    dispatch(changeSearchString(''));
   };
 
   const handleEnter: KeyboardEventHandler<HTMLInputElement> = e => {
@@ -35,10 +30,9 @@ export default function SearchBar() {
   };
 
   useEffect(() => {
-    return () => {
-      dispatch(changeSearchString(''));
-    };
-  }, [dispatch]);
+    if (!searchQuery) setValue('');
+    else setValue(searchQuery);
+  }, [searchQuery]);
 
   return (
     <Container>

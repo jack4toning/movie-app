@@ -1,20 +1,22 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import {
-  changeFilter,
-  fetchMovieList,
   GenreFilters,
   genreFilters,
 } from '../../../store/features/movieListSlice';
-import { useDispatch, useSelector } from '../../../store/hooks';
 
 export function GenreFilter() {
-  const dispatch = useDispatch();
-  const { data } = useSelector(state => state.movieList);
-  const { filter: filters } = data.fetchOptions;
+  // const { filter: filters } = data.fetchOptions;
+  const [searchParams, setSearchParams] = useSearchParams();
+  let genreParam = searchParams.get('genre');
+  let filters: string[] = [''];
+  if (genreParam) filters = genreParam.split(',');
+  console.log(searchParams.get('genre'));
 
   const handleSelectFilter = (selectedFilter: GenreFilters) => {
-    let gFilters: GenreFilters[];
+    // let gFilters: GenreFilters[];
+    let gFilters: string[];
     // check if selected filter is already active
     if (!checkActive(selectedFilter)) {
       // selectedFilter is not active
@@ -25,35 +27,38 @@ export function GenreFilter() {
       else if (checkActive('')) gFilters = [selectedFilter];
       // else filters doesn't include "", just add selectedFilter to filters
       else gFilters = [...filters, selectedFilter];
-
-      dispatch(changeFilter(gFilters));
-      dispatch(fetchMovieList());
     } else {
       // selectedFilter is active
       if (selectedFilter === '') {
         // for filter "", aka. All, not need to changeFilters, just refetch movie list.
-        dispatch(fetchMovieList());
-        return;
+        gFilters = [''];
       } else {
         // for others,
         if (filters.length === 1) {
           // if filters only include 1 filter(just the selected filter)
-          // just active only filter "", then refetch movie list.
-          dispatch(changeFilter(['']));
-          dispatch(fetchMovieList());
+          // which means unselect that one, so just active filter "", then refetch movie list.
+          gFilters = [''];
         } else {
           // otherwise, deactive itself then refetch movie list.
           gFilters = filters.filter(filter => filter !== selectedFilter);
-
-          dispatch(changeFilter(gFilters));
-          dispatch(fetchMovieList());
         }
       }
     }
+
+    if (gFilters.length === 1 && gFilters[0] === '') {
+      searchParams.delete('genre');
+      setSearchParams(searchParams);
+      return;
+    }
+    setSearchParams({ genre: gFilters.join() });
   };
 
   const checkActive = (genreFilter: GenreFilters) => {
-    return filters.findIndex(filter => filter === genreFilter) !== -1;
+    return (
+      filters.findIndex(
+        filter => filter.toUpperCase() === genreFilter.toUpperCase()
+      ) !== -1
+    );
   };
 
   return (
