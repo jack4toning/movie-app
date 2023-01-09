@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchBar should render same results each time no matter what other code changes 1`] = `
+<div>
+  <div
+    class="sc-bcXHqe eFjOgP"
+  >
+    <p
+      class="sc-gswNZR fseLN"
+    >
+      FIND YOUR MOVIE
+    </p>
+    <div
+      class="sc-dkrFOg hSvpyl"
+    >
+      <input
+        class="sc-eDvSVe hajJtn"
+        placeholder="What do you want to watch?"
+        value=""
+      />
+    </div>
+    <button
+      class="sc-jSUZER fpPOHU"
+    >
+      SEARCH
+    </button>
+  </div>
+</div>
+`;
